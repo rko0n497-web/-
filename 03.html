@@ -1,0 +1,3040 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>صراع الأدمغة — Brain Clash</title>
+<meta name="description" content="صراع الأدمغة — منصة مسابقات تفاعلية لثانوية الشيخ عبدالعزيز بن باز">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060f; --bg2:#080e22; --panel:#0b1330; --panel2:#101a3f;
+  --line:rgba(90,150,255,.22); --line2:rgba(120,190,255,.42);
+  --cyan:#28e0ff; --blue:#3b6bff; --purple:#a855f7; --gold:#ffc53d;
+  --ok:#22e08a; --bad:#ff4d6d; --warn:#ff9f43;
+  --txt:#e8eeff; --muted:#8fa1c9;
+  --r:18px; --r2:14px;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --glow:0 0 0 1px rgba(40,224,255,.25), 0 0 32px rgba(40,224,255,.14);
+  --font:'Cairo','Tajawal',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--font);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(1100px 620px at 85% -10%, rgba(59,107,255,.20), transparent 65%),
+    radial-gradient(900px 560px at 8% 105%, rgba(168,85,247,.16), transparent 65%),
+    radial-gradient(700px 500px at 50% 50%, rgba(40,224,255,.05), transparent 70%);
+  background-attachment:fixed;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.35;
+  background-image:linear-gradient(rgba(90,150,255,.06) 1px, transparent 1px),
+                   linear-gradient(90deg, rgba(90,150,255,.06) 1px, transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);
+  -webkit-mask-image:radial-gradient(circle at 50% 40%, #000 30%, transparent 78%);}
+.view{display:none;position:relative;z-index:1;min-height:100vh}
+.view.active{display:block}
+img{max-width:100%;display:block}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+a{color:var(--cyan);text-decoration:none}
+::selection{background:rgba(40,224,255,.3)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#070c1c}
+::-webkit-scrollbar-thumb{background:#1e2d5c;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:#2d438a}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;
+  padding:.72rem 1.35rem;border-radius:12px;border:1px solid var(--line2);
+  background:linear-gradient(180deg,rgba(59,107,255,.22),rgba(59,107,255,.08));
+  color:#dbe7ff;font-weight:700;cursor:pointer;transition:.18s;white-space:nowrap;font-size:.95rem;user-select:none;}
+.btn:hover{transform:translateY(-2px);border-color:var(--cyan);box-shadow:var(--glow)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.primary{background:linear-gradient(135deg,#3b6bff,#28e0ff);border:none;color:#031024;font-weight:900}
+.btn.primary:hover{box-shadow:0 0 34px rgba(40,224,255,.55)}
+.btn.gold{background:linear-gradient(135deg,#ffb01f,#ffd977);border:none;color:#231400;font-weight:900}
+.btn.ok{background:linear-gradient(135deg,#17b96b,#22e08a);border:none;color:#03180e;font-weight:900}
+.btn.bad{background:linear-gradient(135deg,#c92c47,#ff4d6d);border:none;color:#fff;font-weight:900}
+.btn.purple{background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;font-weight:900}
+.btn.ghost{background:rgba(255,255,255,.03);border-color:var(--line)}
+.btn.sm{padding:.45rem .8rem;font-size:.82rem;border-radius:10px}
+.btn.xs{padding:.3rem .6rem;font-size:.75rem;border-radius:8px}
+.btn.block{width:100%}
+.btn.icon{padding:.5rem;width:38px;height:38px}
+
+.card{background:linear-gradient(180deg,rgba(16,26,63,.92),rgba(9,15,38,.95));
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.pad{padding:1.15rem 1.3rem}
+.grid{display:grid;gap:1rem}
+.row{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+.muted{color:var(--muted)}
+.tiny{font-size:.78rem}
+.sm-t{font-size:.88rem}
+h1,h2,h3,h4{line-height:1.3}
+h2{font-size:1.35rem;font-weight:900}
+h3{font-size:1.1rem;font-weight:800}
+hr{border:none;border-top:1px solid var(--line);margin:1rem 0}
+
+.field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.85rem}
+.field > label{font-size:.85rem;font-weight:700;color:#b9c9ee}
+.input,.select,.textarea{width:100%;padding:.68rem .85rem;border-radius:11px;background:#070d20;
+  border:1px solid var(--line);color:var(--txt);outline:none;transition:.15s;font-size:.95rem;}
+.input:focus,.select:focus,.textarea:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(40,224,255,.12)}
+.textarea{min-height:88px;resize:vertical;line-height:1.7}
+.select{cursor:pointer}
+input[type=file]{padding:.45rem;font-size:.82rem}
+input[type=color]{height:44px;padding:3px;cursor:pointer}
+.check{display:flex;align-items:center;gap:.5rem;cursor:pointer;font-size:.9rem;user-select:none}
+.check input{width:18px;height:18px;accent-color:var(--cyan);cursor:pointer}
+
+.badge{display:inline-flex;align-items:center;gap:.35rem;padding:.22rem .6rem;border-radius:999px;
+  font-size:.74rem;font-weight:800;background:rgba(59,107,255,.16);border:1px solid var(--line2);color:#bcd4ff}
+.badge.ok{background:rgba(34,224,138,.14);border-color:rgba(34,224,138,.45);color:#7bf0b8}
+.badge.bad{background:rgba(255,77,109,.14);border-color:rgba(255,77,109,.45);color:#ffa1b1}
+.badge.gold{background:rgba(255,197,61,.14);border-color:rgba(255,197,61,.45);color:#ffdf9a}
+.badge.purple{background:rgba(168,85,247,.16);border-color:rgba(168,85,247,.45);color:#d8b4fe}
+
+/* ============ HOME ============ */
+.home-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:2rem 1.2rem;text-align:center;position:relative}
+.logo-main{width:132px;height:132px;object-fit:contain;border-radius:50%;
+  background:radial-gradient(circle,rgba(40,224,255,.16),transparent 70%);padding:8px;
+  filter:drop-shadow(0 0 26px rgba(40,224,255,.5));animation:floaty 5s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+.school-name{font-size:1.02rem;letter-spacing:.5px;color:#9fb4dd;margin-top:.7rem;font-weight:700}
+.hero-title{font-size:clamp(2.6rem,8.5vw,6rem);font-weight:900;letter-spacing:-1px;line-height:1.05;margin:.45rem 0 .2rem;
+  background:linear-gradient(180deg,#ffffff 12%,#7fd4ff 45%,#3b6bff 78%,#a855f7 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 34px rgba(59,107,255,.55));position:relative;}
+.hero-sub{font-size:clamp(.95rem,2vw,1.25rem);color:#8fd8ff;letter-spacing:6px;font-weight:700;opacity:.9}
+.slogan{margin:1.55rem auto .4rem;display:inline-block;padding:.85rem 1.9rem;border-radius:999px;
+  font-size:clamp(1rem,2.4vw,1.55rem);font-weight:900;color:#ffe9a8;
+  background:linear-gradient(90deg,rgba(255,197,61,.10),rgba(255,197,61,.22),rgba(255,197,61,.10));
+  border:1px solid rgba(255,197,61,.5);
+  box-shadow:0 0 40px rgba(255,197,61,.20), inset 0 0 24px rgba(255,197,61,.08);
+  animation:sloganPulse 3.4s ease-in-out infinite;}
+@keyframes sloganPulse{0%,100%{box-shadow:0 0 30px rgba(255,197,61,.18), inset 0 0 20px rgba(255,197,61,.06)}
+  50%{box-shadow:0 0 62px rgba(255,197,61,.42), inset 0 0 30px rgba(255,197,61,.14)}}
+.hero-actions{display:flex;gap:.85rem;flex-wrap:wrap;justify-content:center;margin-top:1.7rem}
+.hero-actions .btn{padding:1rem 2.2rem;font-size:1.06rem}
+.hero-meta{margin-top:2.4rem;display:flex;gap:1.9rem;flex-wrap:wrap;justify-content:center;color:#7d90ba;font-size:.85rem}
+.hero-meta b{color:#c9dbff}
+.teams-strip{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:2.4rem;max-width:1000px}
+.mini-team{display:flex;align-items:center;gap:.5rem;padding:.4rem .85rem .4rem .45rem;border-radius:999px;
+  background:rgba(12,20,48,.85);border:1px solid var(--line);font-size:.82rem;font-weight:700}
+.mini-team img{width:30px;height:30px;border-radius:50%;object-fit:cover}
+
+/* ============ LOGIN ============ */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.2rem}
+.login-box{width:100%;max-width:430px;padding:2.1rem 1.9rem}
+.login-box .logo-main{width:88px;height:88px;margin:0 auto 1rem}
+.err{color:#ff8fa3;font-size:.85rem;font-weight:700;min-height:1.2em;text-align:center}
+
+/* ============ DASHBOARD ============ */
+.topbar{display:flex;align-items:center;gap:1rem;padding:.8rem 1.3rem;
+  background:rgba(7,12,30,.92);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);flex-wrap:wrap;}
+.topbar img{width:46px;height:46px;border-radius:50%;object-fit:contain;background:#0b1330;padding:3px;
+  border:1px solid var(--line2)}
+.topbar .ttl{font-weight:900;font-size:1.08rem;line-height:1.2}
+.topbar .ttl small{display:block;font-weight:600;font-size:.72rem;color:var(--muted);letter-spacing:2px}
+.dash{display:grid;grid-template-columns:236px 1fr;gap:0;min-height:calc(100vh - 66px)}
+.side{background:rgba(6,11,28,.72);border-left:1px solid var(--line);padding:1rem .7rem;
+  display:flex;flex-direction:column;gap:.3rem;position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto}
+.side a{display:flex;align-items:center;gap:.6rem;padding:.62rem .8rem;border-radius:11px;
+  color:#9fb0d6;font-weight:700;font-size:.9rem;transition:.15s;border:1px solid transparent}
+.side a:hover{background:rgba(59,107,255,.12);color:#dbe7ff}
+.side a.on{background:linear-gradient(90deg,rgba(40,224,255,.20),rgba(59,107,255,.06));
+  color:#fff;border-color:var(--line2);box-shadow:inset 3px 0 0 var(--cyan)}
+.side .ico{font-size:1.05rem;width:22px;text-align:center}
+.dash main{padding:1.3rem;overflow-x:hidden}
+.panel-title{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem;flex-wrap:wrap}
+.panel-title h2{font-size:1.28rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.85rem}
+.stat{padding:.95rem 1rem;border-radius:var(--r2);background:linear-gradient(180deg,rgba(16,26,63,.9),rgba(9,15,38,.95));
+  border:1px solid var(--line);position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 100% 0%,rgba(40,224,255,.12),transparent 60%)}
+.stat .k{font-size:.76rem;color:var(--muted);font-weight:700;position:relative;z-index:1}
+.stat .v{font-size:1.75rem;font-weight:900;color:#fff;position:relative;z-index:1;line-height:1.2}
+.stat .v.cy{color:var(--cyan)} .stat .v.gd{color:var(--gold)} .stat .v.pu{color:var(--purple)}
+
+.teams-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:1rem}
+.team-card{border-radius:var(--r);border:1px solid var(--line);padding:1rem;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,rgba(16,26,63,.92),rgba(8,13,34,.96));transition:.2s}
+.team-card:hover{border-color:var(--line2);transform:translateY(-3px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+.team-card .glow{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 50% -20%, var(--tc,#3b6bff)44, transparent 65%);opacity:.22}
+.team-card .head{display:flex;align-items:center;gap:.7rem;position:relative;z-index:1}
+.team-card img{width:54px;height:54px;border-radius:50%;object-fit:cover;border:2px solid var(--tc,#3b6bff);
+  box-shadow:0 0 18px var(--tc,#3b6bff)55;background:#08102a}
+.team-card .nm{font-weight:900;font-size:1.02rem;line-height:1.25}
+.team-card .sc{font-size:1.6rem;font-weight:900;color:var(--gold);line-height:1}
+.team-card .mem{font-size:.75rem;color:var(--muted);margin-top:.5rem;line-height:1.6;min-height:1.9em;
+  position:relative;z-index:1;word-break:break-word}
+.team-card .foot{display:flex;gap:.35rem;margin-top:.7rem;position:relative;z-index:1;flex-wrap:wrap}
+
+.qrow{display:flex;align-items:center;gap:.8rem;padding:.75rem .9rem;border-radius:13px;
+  background:rgba(12,20,48,.7);border:1px solid var(--line);margin-bottom:.55rem;transition:.15s}
+.qrow:hover{border-color:var(--line2);background:rgba(16,26,63,.85)}
+.qrow.drag{opacity:.4}
+.qrow .idx{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-weight:900;
+  background:rgba(59,107,255,.18);border:1px solid var(--line2);font-size:.82rem;flex-shrink:0}
+.qrow .txt{flex:1;min-width:0}
+.qrow .txt .t{font-weight:700;font-size:.93rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qrow .txt .m{font-size:.72rem;color:var(--muted);margin-top:.15rem;display:flex;gap:.5rem;flex-wrap:wrap}
+.qrow .acts{display:flex;gap:.3rem;flex-shrink:0}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem}
+.tcard{border-radius:16px;padding:1rem;position:relative;overflow:hidden;min-height:168px;
+  display:flex;flex-direction:column;border:1px solid rgba(255,255,255,.14)}
+.tcard .sheen{position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,255,255,.20),transparent 45%);pointer-events:none}
+.tcard .cn{font-weight:900;font-size:1.02rem;position:relative;z-index:1}
+.tcard .cd{font-size:.78rem;opacity:.92;margin-top:.35rem;flex:1;position:relative;z-index:1;line-height:1.55}
+.tcard .cf{display:flex;justify-content:space-between;align-items:center;margin-top:.6rem;position:relative;z-index:1;
+  font-size:.72rem;font-weight:800}
+
+.live-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:1rem;align-items:start}
+@media(max-width:1080px){.live-grid{grid-template-columns:1fr}}
+.qbox{padding:1.1rem;border-radius:var(--r);border:1px solid var(--line2);
+  background:linear-gradient(180deg,rgba(16,26,63,.95),rgba(8,13,34,.98));min-height:150px}
+.qbox .qtext{font-size:1.22rem;font-weight:800;line-height:1.7}
+.choices{display:grid;gap:.5rem;margin-top:.9rem}
+.choice{padding:.6rem .9rem;border-radius:11px;border:1px solid var(--line);background:rgba(8,14,34,.85);
+  font-weight:700;font-size:.92rem;display:flex;gap:.6rem;align-items:center;transition:.15s;cursor:pointer}
+.choice:hover{border-color:var(--line2);background:rgba(16,26,63,.9)}
+.choice .k{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:.75rem;
+  background:rgba(59,107,255,.2);border:1px solid var(--line2);flex-shrink:0}
+.choice.correct{border-color:rgba(34,224,138,.7);background:rgba(34,224,138,.14)}
+.choice.correct .k{background:rgba(34,224,138,.35)}
+.choice.hidden{opacity:.28;text-decoration:line-through;pointer-events:none}
+.choice.selected{border-color:var(--gold);background:rgba(255,197,61,.16);box-shadow:0 0 16px rgba(255,197,61,.35)}
+.choice.selected .k{background:rgba(255,197,61,.35)}
+.choice.locked{cursor:not-allowed}
+
+.team-chips{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.4rem}
+.tchip{display:flex;align-items:center;gap:.45rem;padding:.35rem .7rem .35rem .4rem;border-radius:999px;
+  border:1px solid var(--line);background:rgba(10,17,42,.9);cursor:pointer;font-size:.84rem;font-weight:700;transition:.15s}
+.tchip:hover{border-color:var(--line2)}
+.tchip.on{border-color:var(--cyan);background:rgba(40,224,255,.16);box-shadow:0 0 18px rgba(40,224,255,.28)}
+.tchip img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.timer-big{font-size:2.5rem;font-weight:900;font-variant-numeric:tabular-nums;color:var(--cyan);
+  text-shadow:0 0 26px rgba(40,224,255,.55);text-align:center;line-height:1}
+.timer-big.warn{color:var(--bad);text-shadow:0 0 26px rgba(255,77,109,.6)}
+.bar{height:9px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:.6rem}
+.bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue));
+  transition:width .25s linear;box-shadow:0 0 14px rgba(40,224,255,.55)}
+
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th,td{padding:.6rem .7rem;text-align:right;border-bottom:1px solid var(--line)}
+th{font-size:.76rem;color:var(--muted);font-weight:800;letter-spacing:.4px}
+tbody tr:hover{background:rgba(59,107,255,.07)}
+.rank{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:900;
+  background:rgba(59,107,255,.16);border:1px solid var(--line2);font-size:.85rem}
+.rank.g1{background:linear-gradient(135deg,#ffb01f,#ffe08a);color:#2a1a00;border:none;box-shadow:0 0 20px rgba(255,197,61,.5)}
+.rank.g2{background:linear-gradient(135deg,#c8d4e8,#eef3ff);color:#1a2437;border:none}
+.rank.g3{background:linear-gradient(135deg,#b9722f,#e0a166);color:#2a1400;border:none}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(2,4,12,.82);backdrop-filter:blur(7px);
+  display:none;align-items:flex-start;justify-content:center;z-index:900;padding:1.5rem 1rem;overflow-y:auto}
+.modal-backdrop.on{display:flex}
+.modal{width:100%;max-width:660px;background:linear-gradient(180deg,#0d1636,#080e24);
+  border:1px solid var(--line2);border-radius:20px;box-shadow:0 30px 90px rgba(0,0,0,.75);
+  animation:modalIn .22s ease-out;margin:auto 0}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.modal .mh{display:flex;align-items:center;gap:.7rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line)}
+.modal .mh h3{flex:1;font-size:1.08rem}
+.modal .mb{padding:1.2rem;max-height:min(70vh,700px);overflow-y:auto}
+.modal .mf{padding:.9rem 1.2rem;border-top:1px solid var(--line);display:flex;gap:.6rem;justify-content:flex-start;flex-wrap:wrap}
+
+#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(120px);z-index:2000;
+  display:flex;flex-direction:column;gap:.5rem;align-items:center;transition:.3s;pointer-events:none}
+#toast.show{transform:translateX(-50%) translateY(0)}
+.toast-item{padding:.72rem 1.3rem;border-radius:12px;font-weight:800;font-size:.9rem;
+  background:rgba(16,26,63,.97);border:1px solid var(--line2);box-shadow:var(--shadow);color:#dbe7ff}
+.toast-item.bad{border-color:rgba(255,77,109,.6);color:#ffb3c1}
+.toast-item.ok{border-color:rgba(34,224,138,.6);color:#9df3c8}
+.toast-item.gold{border-color:rgba(255,197,61,.6);color:#ffe6a8}
+
+/* ============ PRESENTATION ============ */
+#view-present{background:
+  radial-gradient(1200px 700px at 50% -15%, rgba(59,107,255,.28), transparent 62%),
+  radial-gradient(900px 600px at 100% 110%, rgba(168,85,247,.20), transparent 60%),
+  #03050e;min-height:100vh;display:none;flex-direction:column;overflow:hidden}
+#view-present.active{display:flex}
+.pres-top{display:flex;align-items:center;gap:1rem;padding:.75rem 1.6rem;
+  border-bottom:1px solid rgba(90,150,255,.2);background:rgba(4,7,18,.55);flex-wrap:wrap}
+.pres-top img{width:60px;height:60px;object-fit:contain;border-radius:50%;
+  filter:drop-shadow(0 0 16px rgba(40,224,255,.55))}
+.pres-top .t1{font-size:1.45rem;font-weight:900;
+  background:linear-gradient(180deg,#fff,#7fd4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pres-top .t2{font-size:.74rem;color:#7f95c4;font-weight:700;letter-spacing:1px}
+.pres-slogan{font-size:.9rem;font-weight:900;color:#ffdf9a;padding:.4rem 1rem;border-radius:999px;
+  border:1px solid rgba(255,197,61,.45);background:rgba(255,197,61,.08);white-space:nowrap}
+.pres-main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:1.5rem 2rem;gap:1.2rem;position:relative;min-height:0}
+.pres-q{font-size:clamp(1.5rem,3.6vw,3.1rem);font-weight:900;text-align:center;line-height:1.5;
+  max-width:1500px;text-shadow:0 0 60px rgba(40,224,255,.28);animation:qIn .45s ease-out}
+@keyframes qIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.pres-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;
+  width:100%;max-width:1450px}
+.pres-choice{padding:1rem 1.3rem;border-radius:16px;border:1px solid rgba(90,150,255,.35);
+  background:linear-gradient(180deg,rgba(20,32,74,.9),rgba(8,14,34,.95));
+  font-size:clamp(1rem,1.9vw,1.6rem);font-weight:800;display:flex;gap:.9rem;align-items:center;
+  animation:qIn .4s ease-out backwards;text-align:right;color:inherit;font-family:inherit}
+.pres-choice[data-clickable="1"]{cursor:pointer;transition:.15s}
+.pres-choice[data-clickable="1"]:hover{transform:translateY(-3px) scale(1.01);
+  border-color:var(--cyan);box-shadow:0 0 36px rgba(40,224,255,.45);
+  background:linear-gradient(180deg,rgba(30,50,120,.95),rgba(15,25,60,.98))}
+.pres-choice .kk{width:44px;height:44px;flex-shrink:0;border-radius:12px;display:grid;place-items:center;
+  background:rgba(59,107,255,.25);border:1px solid rgba(90,150,255,.5);font-size:1.05rem;font-weight:900}
+.pres-choice.correct{border-color:rgba(34,224,138,.85);background:linear-gradient(180deg,rgba(20,80,55,.9),rgba(8,40,26,.95));
+  box-shadow:0 0 44px rgba(34,224,138,.35)}
+.pres-choice.hidden{opacity:.18;filter:blur(1px);pointer-events:none}
+.pres-choice.selected{border-color:var(--gold);background:linear-gradient(180deg,rgba(90,70,15,.92),rgba(40,30,5,.96));
+  box-shadow:0 0 44px rgba(255,197,61,.5)}
+.pres-choice.selected .kk{background:rgba(255,197,61,.35)}
+.pres-timer{font-size:clamp(2.6rem,6vw,5rem);font-weight:900;font-variant-numeric:tabular-nums;line-height:1;
+  color:#fff;text-shadow:0 0 46px rgba(40,224,255,.7)}
+.pres-timer.low{color:#ff6b86;text-shadow:0 0 46px rgba(255,77,109,.8);animation:pulseT .8s infinite}
+@keyframes pulseT{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+.timeup-msg{font-size:clamp(2rem,5vw,3.8rem);font-weight:900;color:#ff6b86;
+  text-shadow:0 0 40px rgba(255,77,109,.75);text-align:center;margin:.5rem 0;
+  animation:pulseT .85s infinite}
+.pres-scorebar{display:flex;gap:.7rem;padding:.8rem 1.2rem;border-top:1px solid rgba(90,150,255,.2);
+  background:rgba(4,7,18,.65);overflow-x:auto;justify-content:center;flex-wrap:wrap}
+.pscore{display:flex;align-items:center;gap:.55rem;padding:.4rem .95rem .4rem .5rem;border-radius:999px;
+  background:rgba(10,17,42,.9);border:1px solid rgba(90,150,255,.25);min-width:0;transition:.3s;flex-shrink:0}
+.pscore img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--tc,#3b6bff)}
+.pscore .n{font-size:.9rem;font-weight:800;white-space:nowrap}
+.pscore .s{font-size:1.25rem;font-weight:900;color:#ffd977;font-variant-numeric:tabular-nums}
+.pscore.lead{border-color:rgba(255,197,61,.8);box-shadow:0 0 26px rgba(255,197,61,.45);
+  background:linear-gradient(180deg,rgba(60,45,10,.9),rgba(20,15,4,.95))}
+.pscore.answering{border-color:var(--cyan);box-shadow:0 0 26px rgba(40,224,255,.55);
+  background:linear-gradient(180deg,rgba(10,50,90,.9),rgba(5,20,40,.95))}
+.pres-idle{text-align:center;opacity:.85}
+.pres-idle .big{font-size:clamp(1.8rem,4vw,3.4rem);font-weight:900;
+  background:linear-gradient(180deg,#fff,#5fa8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.fx{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;z-index:800}
+.fx .bubble{padding:1.6rem 3.4rem;border-radius:24px;font-size:clamp(1.8rem,5vw,3.6rem);font-weight:900;
+  animation:fxPop 1.9s ease-out forwards;text-align:center}
+.fx.correct .bubble{background:rgba(10,60,40,.93);border:2px solid var(--ok);color:#8dffc6;box-shadow:0 0 90px rgba(34,224,138,.7)}
+.fx.wrong .bubble{background:rgba(60,10,20,.93);border:2px solid var(--bad);color:#ffb3c1;box-shadow:0 0 90px rgba(255,77,109,.7)}
+.fx.card .bubble{background:rgba(30,15,60,.95);border:2px solid var(--purple);color:#e2c7ff;box-shadow:0 0 90px rgba(168,85,247,.75)}
+@keyframes fxPop{0%{opacity:0;transform:scale(.55) rotate(-5deg)}18%{opacity:1;transform:scale(1.08) rotate(0)}
+  30%{transform:scale(1)}78%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.14)}}
+.countdown-num{font-size:clamp(6rem,22vw,17rem);font-weight:900;line-height:1;
+  background:linear-gradient(180deg,#fff,#28e0ff);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 60px rgba(40,224,255,.85));animation:cdPulse 1s ease-out}
+@keyframes cdPulse{0%{transform:scale(.4);opacity:0}40%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:.95}}
+.results-wrap{padding:2rem;text-align:center;width:100%;max-width:1200px;margin:0 auto;animation:qIn .5s}
+.results-title{font-size:clamp(1.8rem,4vw,3.2rem);font-weight:900;margin-bottom:1.6rem;
+  background:linear-gradient(180deg,#fff,#ffd977);-webkit-background-clip:text;background-clip:text;color:transparent}
+.podium{display:flex;gap:1.2rem;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin-bottom:2rem}
+.pod{border-radius:20px;padding:1.2rem;min-width:190px;border:1px solid var(--line2);
+  background:linear-gradient(180deg,rgba(20,32,74,.92),rgba(8,14,34,.96));position:relative;overflow:hidden}
+.pod img{width:84px;height:84px;border-radius:50%;object-fit:cover;margin:0 auto .7rem;border:3px solid var(--tc,#3b6bff)}
+.pod .pn{font-weight:900;font-size:1.1rem}
+.pod .ps{font-size:2rem;font-weight:900;color:#ffd977;line-height:1.1}
+.pod .pr{font-size:.78rem;color:#9fb4dd;font-weight:800;letter-spacing:1px}
+.pod.first{border-color:rgba(255,197,61,.9);box-shadow:0 0 60px rgba(255,197,61,.45);transform:scale(1.07)}
+.pod.first::before{content:'🏆';position:absolute;top:6px;left:10px;font-size:1.6rem;animation:floaty 3s infinite}
+
+.hint{background:rgba(40,224,255,.07);border:1px solid rgba(40,224,255,.28);border-radius:12px;
+  padding:.7rem .9rem;font-size:.82rem;color:#a9d8ff;line-height:1.7}
+.hint.warn{background:rgba(255,159,67,.08);border-color:rgba(255,159,67,.35);color:#ffd0a3}
+.hint.bad{background:rgba(255,77,109,.08);border-color:rgba(255,77,109,.35);color:#ffb3c1}
+.kbd{display:inline-block;padding:.12rem .45rem;border-radius:6px;background:#131f45;
+  border:1px solid var(--line2);font-size:.74rem;font-weight:800;font-family:monospace}
+.fs-btn{position:fixed;bottom:1rem;left:1rem;z-index:100;opacity:.35;transition:.2s}
+.fs-btn:hover{opacity:1}
+
+.live-state-banner{padding:.65rem .9rem;border-radius:11px;font-weight:800;font-size:.88rem;
+  display:flex;align-items:center;gap:.6rem;border:1px solid var(--line);margin-bottom:.8rem;
+  background:rgba(10,17,42,.8)}
+.live-state-banner.waiting{border-color:rgba(90,150,255,.4);color:#bcd4ff}
+.live-state-banner.answering{border-color:rgba(40,224,255,.6);color:#8fd8ff;background:rgba(10,40,70,.6)}
+.live-state-banner.locked{border-color:rgba(255,197,61,.6);color:#ffe0a3;background:rgba(50,35,10,.6)}
+.live-state-banner.timeup{border-color:rgba(255,77,109,.6);color:#ffb3c1;background:rgba(50,10,20,.6)}
+.live-state-banner.scored{border-color:rgba(34,224,138,.6);color:#9df3c8;background:rgba(10,50,30,.6)}
+
+/* ============ TEAM DEVICE ============ */
+.team-answer-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.4rem;text-align:center;gap:1.2rem;max-width:900px;margin:0 auto}
+.team-answer-page .tq{font-size:clamp(1.3rem,3vw,2.2rem);font-weight:900;line-height:1.6}
+.team-answer-page .tchoices{display:grid;gap:.8rem;width:100%;max-width:680px}
+.team-answer-page .tchoice{padding:1rem 1.3rem;border-radius:14px;border:1px solid var(--line2);
+  background:rgba(12,20,48,.9);font-size:clamp(1rem,2vw,1.4rem);font-weight:800;cursor:pointer;
+  transition:.15s;text-align:right;color:inherit;font-family:inherit}
+.team-answer-page .tchoice:hover{transform:translateY(-2px);border-color:var(--cyan);
+  box-shadow:0 0 26px rgba(40,224,255,.4)}
+.team-answer-page .tchoice.selected{border-color:var(--gold);background:rgba(255,197,61,.16);cursor:not-allowed}
+.team-answer-page .tchoice.disabled{opacity:.45;cursor:not-allowed;pointer-events:none}
+
+/* ============ TACTICAL ARENA ============ */
+#view-arena{background:
+  radial-gradient(ellipse at 50% 0%, #1a1040 0%, #05030d 70%);
+  min-height:100vh;display:none;flex-direction:column;overflow:hidden;position:relative}
+#view-arena.active{display:flex}
+#view-arena::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(168,85,247,.14), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(40,224,255,.12), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255,197,61,.06), transparent 60%);
+  animation:arenaBg 12s ease-in-out infinite alternate}
+@keyframes arenaBg{0%{opacity:.7}100%{opacity:1}}
+.arena-top{display:flex;align-items:center;gap:1rem;padding:.75rem 1.4rem;
+  border-bottom:1px solid rgba(120,190,255,.25);background:rgba(4,7,18,.78);
+  backdrop-filter:blur(14px);position:relative;z-index:2;flex-wrap:wrap}
+.arena-top img{width:46px;height:46px;border-radius:50%;object-fit:contain;
+  background:#0b1330;padding:3px;border:1px solid var(--line2);box-shadow:0 0 18px rgba(40,224,255,.4)}
+.arena-top h1{font-size:1.25rem;font-weight:900;
+  background:linear-gradient(180deg,#fff,#c084fc);-webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:0 0 30px rgba(168,85,247,.35)}
+.arena-top .arena-tabs{display:flex;gap:.35rem;background:rgba(10,17,42,.7);padding:.25rem;border-radius:11px;border:1px solid var(--line)}
+.arena-top .arena-tabs button{padding:.45rem .85rem;border-radius:9px;border:none;background:transparent;
+  color:#9fb0d6;font-weight:800;font-size:.85rem;cursor:pointer;transition:.15s}
+.arena-top .arena-tabs button.on{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 0 20px rgba(168,85,247,.45)}
+
+.arena-main{flex:1;display:flex;flex-direction:column;gap:1rem;padding:1.2rem 1.4rem;overflow-y:auto;
+  position:relative;z-index:1;min-height:0}
+.arena-stage{position:relative;min-height:340px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.2rem;padding:1rem;
+  border-radius:22px;border:1px solid rgba(120,190,255,.22);
+  background:radial-gradient(ellipse at 50% 30%, rgba(30,20,70,.85), rgba(5,3,15,.95));
+  box-shadow:inset 0 0 80px rgba(168,85,247,.14);overflow:hidden}
+.arena-stage::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0,transparent 60px,
+    rgba(120,190,255,.04) 60px, rgba(120,190,255,.04) 61px);opacity:.5}
+
+.arena-teams{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;align-items:center;
+  padding:.6rem;max-width:1200px}
+.arena-team{width:118px;padding:.85rem .5rem;border-radius:16px;text-align:center;
+  background:linear-gradient(180deg,rgba(20,30,70,.92),rgba(8,12,30,.97));
+  border:2px solid rgba(90,150,255,.28);transition:.3s;position:relative;opacity:.92}
+.arena-team img{width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 auto .45rem;
+  border:3px solid var(--tc,#3b6bff);transition:.3s;background:#08102a}
+.arena-team .n{font-weight:900;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  line-height:1.2}
+.arena-team .sc{font-size:.72rem;color:#ffd977;font-weight:800;margin-top:.2rem}
+.arena-team.spinning{animation:teamPulse .28s infinite alternate;border-color:var(--cyan);
+  box-shadow:0 0 30px rgba(40,224,255,.55)}
+.arena-team.winner{border-color:var(--gold);
+  background:linear-gradient(180deg,rgba(70,50,10,.95),rgba(30,20,5,.98));
+  box-shadow:0 0 60px rgba(255,197,61,.7), inset 0 0 30px rgba(255,197,61,.2);
+  transform:scale(1.15);opacity:1}
+.arena-team.winner img{animation:winnerPulse .9s ease-out}
+.arena-team.dim{opacity:.28;filter:grayscale(.7)}
+@keyframes teamPulse{0%{transform:scale(1)}100%{transform:scale(1.06);box-shadow:0 0 44px rgba(40,224,255,.7)}}
+@keyframes winnerPulse{0%{transform:scale(1)}40%{transform:scale(1.25);filter:drop-shadow(0 0 30px #ffc53d)}
+  100%{transform:scale(1)}}
+
+.arena-cards{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;padding:.6rem;max-width:1200px}
+.arena-card{width:140px;height:200px;border-radius:14px;position:relative;overflow:hidden;
+  border:2px solid rgba(255,255,255,.18);transition:.35s;transform-style:preserve-3d;
+  display:flex;flex-direction:column;padding:.75rem .7rem;color:#fff;font-weight:900;
+  box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.arena-card .acn{font-size:.92rem;line-height:1.3;margin-bottom:.35rem;position:relative;z-index:2}
+.arena-card .acd{font-size:.68rem;opacity:.95;flex:1;line-height:1.45;position:relative;z-index:2;font-weight:600}
+.arena-card .acf{font-size:.65rem;font-weight:800;opacity:.95;position:relative;z-index:2}
+.arena-card .emoji{position:absolute;top:6px;left:6px;font-size:1.4rem;opacity:.9;z-index:2}
+.arena-card .sheen{position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(255,255,255,.28),transparent 42%);pointer-events:none;z-index:1}
+.arena-card.spinning{animation:cardShuffle .32s infinite alternate}
+.arena-card.winner{transform:scale(1.18) translateY(-6px);border-color:var(--gold);
+  box-shadow:0 0 60px rgba(255,197,61,.85), 0 0 100px rgba(168,85,247,.4);z-index:3;
+  animation:winnerCardPop .8s ease-out}
+.arena-card.dim{opacity:.32;filter:saturate(.5)}
+.arena-card.face-down{background:linear-gradient(135deg,#1e1b4b,#312e81)!important;
+  border-color:rgba(168,85,247,.6)!important}
+.arena-card.face-down .acn,.arena-card.face-down .acd,.arena-card.face-down .acf,.arena-card.face-down .emoji{opacity:0}
+.arena-card.face-down::after{content:'🃏';position:absolute;inset:0;display:grid;place-items:center;
+  font-size:3rem;opacity:.85;z-index:2}
+@keyframes cardShuffle{0%{transform:rotate(-5deg) translate(-6px,-4px)}
+  100%{transform:rotate(5deg) translate(6px,6px)}}
+@keyframes winnerCardPop{0%{transform:scale(.6) rotate(-10deg)}
+  50%{transform:scale(1.28) rotate(4deg)}100%{transform:scale(1.18) translateY(-6px) rotate(0)}}
+
+.arena-result{text-align:center;padding:1.5rem;animation:resultIn .55s ease-out;position:relative;z-index:2}
+@keyframes resultIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.arena-result .msg{font-size:clamp(1.4rem,3.2vw,2.6rem);font-weight:900;color:#ffe9a8;
+  text-shadow:0 0 40px rgba(255,197,61,.6);line-height:1.5;
+  background:linear-gradient(180deg,#fff,#ffd977);-webkit-background-clip:text;background-clip:text;color:transparent}
+.arena-result .sub{font-size:1.1rem;color:#c8b6ff;margin-top:.75rem;font-weight:700;text-shadow:0 0 20px rgba(168,85,247,.5)}
+.arena-result .card-preview{display:inline-block;margin-top:1rem;padding:1rem 1.6rem;border-radius:16px;
+  font-size:1.3rem;font-weight:900;border:2px solid rgba(255,255,255,.3);
+  animation:cardPreviewIn .7s ease-out .15s backwards}
+@keyframes cardPreviewIn{from{opacity:0;transform:translateY(20px) scale(.85)}to{opacity:1;transform:none}}
+
+.arena-controls{padding:1rem 1.4rem;border-top:1px solid rgba(120,190,255,.25);
+  background:rgba(4,7,18,.78);backdrop-filter:blur(14px);position:relative;z-index:2;
+  display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.arena-controls .btn{padding:.6rem 1.1rem;font-size:.88rem}
+
+.arena-inv{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem;padding:.5rem 0}
+.arena-inv-card{padding:.85rem 1rem;border-radius:14px;
+  background:linear-gradient(180deg,rgba(20,30,70,.85),rgba(8,12,30,.95));
+  border:1px solid var(--line);transition:.18s}
+.arena-inv-card:hover{border-color:var(--line2)}
+.arena-inv-card .head{display:flex;align-items:center;gap:.6rem;margin-bottom:.65rem}
+.arena-inv-card .head img{width:42px;height:42px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--tc,#3b6bff);flex-shrink:0}
+.arena-inv-card .head .nm{flex:1;font-weight:900;font-size:.92rem;line-height:1.2}
+.arena-inv-card .head .cnt{font-size:1.05rem;font-weight:900;color:var(--gold);background:rgba(255,197,61,.12);
+  padding:.15rem .55rem;border-radius:999px;border:1px solid rgba(255,197,61,.4)}
+.arena-inv-card .mini-cards{display:flex;flex-wrap:wrap;gap:.35rem}
+.mini-card{padding:.35rem .65rem;border-radius:9px;font-size:.74rem;font-weight:800;cursor:pointer;
+  border:1px solid rgba(255,255,255,.2);transition:.15s;position:relative}
+.mini-card:hover{transform:translateY(-2px);box-shadow:0 0 16px rgba(255,255,255,.2)}
+.mini-card.used{opacity:.4;text-decoration:line-through;cursor:default}
+.mini-card .num{display:inline-block;margin-right:.3rem;background:rgba(0,0,0,.35);
+  padding:0 .4rem;border-radius:6px;font-size:.68rem}
+
+.arena-history{padding:.5rem 0;max-height:280px;overflow-y:auto}
+.arena-history .hrow{display:flex;gap:.6rem;align-items:center;padding:.45rem .7rem;
+  border-radius:9px;font-size:.82rem;border-bottom:1px solid rgba(120,190,255,.1)}
+.arena-history .hrow .t{color:var(--muted);font-size:.72rem;min-width:65px}
+.arena-history .hrow .ic{font-size:1rem;width:24px;text-align:center}
+.arena-history .hrow .txt{flex:1}
+
+.arena-mode-public .arena-main{padding:1.5rem 2rem}
+.arena-mode-public .arena-stage{min-height:60vh;border-color:rgba(168,85,247,.5);
+  box-shadow:inset 0 0 120px rgba(168,85,247,.25), 0 0 60px rgba(168,85,247,.2)}
+.arena-mode-public .arena-team{width:140px;padding:1rem .6rem}
+.arena-mode-public .arena-team img{width:80px;height:80px}
+.arena-mode-public .arena-team .n{font-size:1rem}
+.arena-mode-public .arena-card{width:170px;height:240px}
+.arena-mode-public .arena-card .acn{font-size:1.05rem}
+.arena-mode-public .arena-card .acd{font-size:.78rem}
+.arena-mode-public .arena-result .msg{font-size:clamp(2rem,4.5vw,3.6rem)}
+.arena-mode-public .arena-controls{display:none}
+
+.arena-top-btn{padding:.55rem 1rem;border-radius:11px;border:1px solid var(--line2);
+  background:rgba(10,17,42,.8);color:#dbe7ff;font-weight:800;font-size:.85rem;cursor:pointer;transition:.15s;
+  display:inline-flex;align-items:center;gap:.4rem}
+.arena-top-btn:hover{border-color:var(--cyan);box-shadow:var(--glow)}
+
+@media(max-width:900px){
+  .dash{grid-template-columns:1fr}
+  .side{position:static;height:auto;flex-direction:row;overflow-x:auto;border-left:none;border-bottom:1px solid var(--line)}
+  .side a{white-space:nowrap}
+  .side .ico{display:none}
+  .arena-team{width:96px}
+  .arena-card{width:118px;height:170px}
+}
+@media print{
+  body{background:#fff;color:#000}
+  .btn,.side,.topbar{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HOME ================= -->
+<section id="view-home" class="view">
+  <div class="home-wrap">
+    <img id="home-logo" class="logo-main" alt="شعار المدرسة">
+    <div class="school-name" id="home-school">ثانوية الشيخ عبدالعزيز بن باز</div>
+    <h1 class="hero-title">صراع الأدمغة</h1>
+    <div class="hero-sub">BRAIN CLASH</div>
+    <div class="slogan">المسألة مو بس مذاكرة.. المسألة سرعة وتكتيك!</div>
+    <div class="hero-actions">
+      <button class="btn primary" onclick="App.goStart()">⚡ ابدأ المنافسة</button>
+      <button class="btn ghost" onclick="App.go('#/arena')">🃏 ساحة البطاقات</button>
+      <button class="btn ghost" onclick="App.openPresent()">🖥️ شاشة العرض</button>
+      <button class="btn ghost" onclick="App.go('#/leaderboard')">🏅 لوحة النتائج</button>
+    </div>
+    <div class="hero-meta">
+      <span>🎯 <b id="home-audience">طلاب الصف الثاني الثانوي</b></span>
+      <span>👨‍🏫 المشرف: <b id="home-supervisor">أ. محمد السبر</b></span>
+    </div>
+    <div class="teams-strip" id="home-teams"></div>
+  </div>
+</section>
+
+<!-- ================= LOGIN ================= -->
+<section id="view-login" class="view">
+  <div class="login-wrap">
+    <div class="card login-box">
+      <img id="login-logo" class="logo-main" alt="شعار المدرسة">
+      <h2 style="text-align:center;margin-bottom:.2rem">دخول المنظم</h2>
+      <p class="muted tiny" style="text-align:center;margin-bottom:1.2rem">لوحة التحكم خاصة بمنظّم المسابقة فقط</p>
+      <div class="field"><label>اسم المستخدم</label>
+        <input class="input" id="lg-user" autocomplete="username" placeholder="admin"></div>
+      <div class="field"><label>كلمة المرور</label>
+        <input class="input" id="lg-pass" type="password" autocomplete="current-password"
+               placeholder="••••" onkeydown="if(event.key==='Enter')App.login()"></div>
+      <div class="err" id="lg-err"></div>
+      <button class="btn primary block" style="margin-top:.4rem" onclick="App.login()">🔐 دخول</button>
+      <div class="hint" style="margin-top:1rem" id="login-hint"></div>
+      <button class="btn ghost block" style="margin-top:.7rem" onclick="App.go('#/')">↩ رجوع للرئيسية</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section id="view-dash" class="view">
+  <header class="topbar">
+    <img id="dash-logo" alt="logo">
+    <div class="ttl">صراع الأدمغة <small>لوحة تحكم المنظّم</small></div>
+    <div class="spacer"></div>
+    <span class="badge" id="dash-status">—</span>
+    <button class="btn sm purple" onclick="App.go('#/arena')">🃏 الساحة</button>
+    <button class="btn sm ghost" onclick="App.openPresent()">🖥️ العرض</button>
+    <button class="btn sm ghost" onclick="App.toggleSound()" id="dash-sound">🔊</button>
+    <button class="btn sm bad" onclick="App.logout()">خروج</button>
+  </header>
+  <div class="dash">
+    <nav class="side" id="dash-nav"></nav>
+    <main id="dash-content"></main>
+  </div>
+</section>
+
+<!-- ================= PRESENTATION ================= -->
+<section id="view-present" class="view"></section>
+
+<!-- ================= ARENA ================= -->
+<section id="view-arena" class="view">
+  <div class="arena-top">
+    <img id="arena-logo" alt="">
+    <h1>ساحة البطاقات التكتيكية</h1>
+    <div class="spacer"></div>
+    <div class="arena-tabs">
+      <button id="arena-tab-org" onclick="App.arena.setMode('organizer')">🎮 المنظّم</button>
+      <button id="arena-tab-pub" onclick="App.arena.setMode('public')">👁 العرض العام</button>
+    </div>
+    <button class="arena-top-btn" onclick="App.toggleFullscreen()">⛶ ملء الشاشة</button>
+    <button class="arena-top-btn" onclick="App.go(isLogged() ? '#/dash/live' : '#/')">↩ رجوع</button>
+  </div>
+  <div class="arena-main" id="arena-main"></div>
+</section>
+
+<!-- ================= LEADERBOARD ================= -->
+<section id="view-leaderboard" class="view">
+  <div style="padding:2rem 1.2rem;max-width:1100px;margin:0 auto">
+    <div class="row" style="margin-bottom:1.3rem">
+      <button class="btn ghost sm" onclick="App.go('#/')">↩ الرئيسية</button>
+      <div class="spacer"></div>
+      <h2>🏅 لوحة النتائج المباشرة</h2>
+    </div>
+    <div class="card pad" id="public-lb"></div>
+  </div>
+</section>
+
+<!-- ================= TEAM DEVICE ================= -->
+<section id="view-team" class="view">
+  <div class="team-answer-page" id="team-page"></div>
+</section>
+
+<div id="toast"></div>
+<div class="modal-backdrop" id="modal-root" onclick="if(event.target===this)App.closeModal()">
+  <div class="modal" id="modal-box"></div>
+</div>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const SALT = 'brainclash::v1::';
+const LS_KEY = 'brainclash_state_v1';
+const SESSION_KEY = 'brainclash_session';
+
+async function sha256(str) {
+  if (!window.crypto || !crypto.subtle) {
+    let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0;
+    return 'fb' + (h >>> 0).toString(16);
+  }
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function makeLogo(emoji, color) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+    <defs><radialGradient id="g" cx="50%" cy="32%">
+      <stop offset="0" stop-color="${color}" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#05060f"/></radialGradient></defs>
+    <circle cx="60" cy="60" r="56" fill="url(#g)" stroke="${color}" stroke-width="4"/>
+    <circle cx="60" cy="60" r="47" fill="none" stroke="${color}" stroke-opacity="0.35" stroke-width="1.5"/>
+    <text x="60" y="79" font-size="52" text-anchor="middle">${emoji}</text></svg>`;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
+
+let _actx = null;
+function ac() {
+  if (!_actx) { const C = window.AudioContext || window.webkitAudioContext; if (C) _actx = new C(); }
+  return _actx;
+}
+function beep(freq, dur = .14, type = 'sine', vol = .13) {
+  if (!state || !state.settings.sound) return;
+  try {
+    const c = ac(); if (!c) return;
+    if (c.state === 'suspended') c.resume();
+    const o = c.createOscillator(), g = c.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0008, c.currentTime + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + dur + .02);
+  } catch (e) {}
+}
+const SND = {
+  tick()   { beep(880, .045, 'square', .05); },
+  start()  { beep(520, .09); setTimeout(() => beep(780, .13), 95); },
+  correct(){ beep(660, .1); setTimeout(() => beep(880, .12), 100); setTimeout(() => beep(1180, .22), 210); },
+  wrong()  { beep(190, .22, 'sawtooth', .11); setTimeout(() => beep(130, .34, 'sawtooth', .11), 170); },
+  card()   { beep(1150, .07, 'triangle', .1); setTimeout(() => beep(1550, .12, 'triangle', .09), 80); },
+  spin()   { beep(400, .05, 'square', .04); },
+  win()    { [523, 659, 784, 1046, 1318].forEach((f, i) => setTimeout(() => beep(f, .3, 'triangle', .13), i * 145)); },
+  timeout(){ beep(300, .3, 'sawtooth', .12); setTimeout(() => beep(200, .45, 'sawtooth', .12), 260); }
+};
+function playSound(name) { try { SND[name] && SND[name](); } catch (e) {} }
+
+let storageOK = true;
+function readRaw() { try { return localStorage.getItem(LS_KEY); } catch (e) { storageOK = false; return null; } }
+function writeRaw(v) { try { localStorage.setItem(LS_KEY, v); return true; } catch (e) { storageOK = false; return false; } }
+
+/* =====================================================================
+   DEFAULTS
+   ===================================================================== */
+const TEAM_SEED = [
+  ['التماسيح', '#22e08a', '🐊'], ['درع نجد', '#ffc53d', '🛡️'],
+  ['العرابين', '#a855f7', '🦅'], ['القواطير', '#ff8a3d', '🐈'],
+  ['النقاريات', '#ff5fa2', '🐦'], ['الدبية القطبية', '#28e0ff', '🐻‍❄️'],
+  ['القنافذ', '#9ade2b', '🦔'], ['الرقم الصعب', '#ff4d6d', '🔥']
+];
+function defaultTeams() {
+  return TEAM_SEED.map(([name, color, emoji]) => ({
+    id: uid(), name, color, emoji, logo: makeLogo(emoji, color),
+    members: [], score: 0, correct: 0, wrong: 0, cards: {}, cardsUsed: {}, active: true
+  }));
+}
+function defaultCards() {
+  const c = (name, desc, color, effect, value, uses, emoji) =>
+    ({ id: uid(), name, desc, color, effect, value, uses, emoji, confirm: true });
+  return [
+    c('مضاعفة النقاط', 'تُضاعف نقاط السؤال التالي لهذا الفريق.', '#3b6bff', 'double', 0, 1, '✖️2'),
+    c('وقت إضافي', 'يمنح الفريق 15 ثانية إضافية على المؤقت.', '#28e0ff', 'extraTime', 15, 2, '⏱️'),
+    c('خمسون بالمئة', 'يحذف إجابتين خاطئتين من سؤال الاختيار المتعدد.', '#a855f7', 'fiftyFifty', 2, 1, '➗'),
+    c('سرقة الدور', 'يسرق الفريق السؤال الحالي (تُطبَّق يدوياً).', '#ff4d6d', 'steal', 0, 1, '🎯'),
+    c('سؤال إضافي', 'يمنح الفريق 10 نقاط إضافية فورية.', '#ffc53d', 'bonus', 10, 1, '🎁'),
+    c('درع الحماية', 'يحمي الفريق من خصم نقاط واحد.', '#22e08a', 'shield', 0, 1, '🛡️'),
+    c('التحدي المزدوج', 'يتحدى الفريق خصماً في سؤال خاص (يدوياً).', '#ff8a3d', 'challenge', 0, 1, '⚔️'),
+    c('بطاقة الغموض', 'تأثير عشوائي يحدده النظام.', '#7c3aed', 'mystery', 0, 1, '❓'),
+    c('السؤال الذهبي', 'سؤال خاص عالي القيمة (يدوياً).', '#ffd977', 'golden', 20, 1, '🥇'),
+    c('بطاقة الإنقاذ', 'محاولة ثانية للسؤال (يدوياً).', '#22e08a', 'rescue', 0, 1, '🆘')
+  ];
+}
+function defaultQuestions() {
+  const q = (o) => Object.assign({
+    id: uid(), text: '', image: '', audio: '', category: 'عام', difficulty: 'medium',
+    points: 10, timeLimit: 30, format: 'mcq', choices: [], correctIndex: 0,
+    correctText: '', explanation: '', penalty: 0, bonus: 0
+  }, o);
+  return [
+    q({ text: 'ما هو أطول نهر في العالم؟', category: 'جغرافيا', difficulty: 'easy', points: 10,
+        choices: ['النيل', 'الأمازون', 'المسيسيبي', 'اليانغتسي'], correctIndex: 0,
+        explanation: 'يبلغ طول نهر النيل حوالي 6,650 كم.' }),
+    q({ text: 'الدماغ البشري يستهلك حوالي 20% من طاقة الجسم.', category: 'علوم', difficulty: 'medium',
+        points: 15, format: 'tf', choices: ['صح', 'خطأ'], correctIndex: 0,
+        explanation: 'نعم، رغم أن وزنه لا يتجاوز 2% من وزن الجسم.' }),
+    q({ text: 'اذكر عاصمة اليابان.', category: 'جغرافيا', difficulty: 'easy', points: 10,
+        format: 'open', correctText: 'طوكيو', timeLimit: 20 }),
+    q({ text: 'كم عدد أضلاع الشكل السداسي؟', category: 'رياضيات', difficulty: 'easy', points: 10,
+        choices: ['4', '5', '6', '8'], correctIndex: 2 }),
+    q({ text: 'ما ناتج 12 × 12 ؟', category: 'رياضيات', difficulty: 'medium', points: 15,
+        format: 'quick', correctText: '144', timeLimit: 10 }),
+    q({ text: 'من مؤلف كتاب «المقدمة»؟', category: 'ثقافة', difficulty: 'medium', points: 15,
+        choices: ['ابن خلدون', 'ابن سينا', 'ابن رشد', 'الجاحظ'], correctIndex: 0 })
+  ];
+}
+
+function defaultState() {
+  return {
+    version: 3,
+    school: { name: 'ثانوية الشيخ عبدالعزيز بن باز', logo: '' },
+    event: {
+      title: 'صراع الأدمغة',
+      slogan: 'المسألة مو بس مذاكرة.. المسألة سرعة وتكتيك!',
+      audience: 'طلاب الصف الثاني الثانوي',
+      supervisor: 'أ. محمد السبر',
+      date: ''
+    },
+    auth: { username: 'admin', passHash: '' },
+    settings: {
+      sound: true, volume: .6,
+      modes: { turn: true, speed: true, mcq: true, sudden: true, custom: true },
+      timerDefault: 30, penaltyDefault: 0, bonusDefault: 0, tieBreak: true,
+      pointsByDifficulty: { easy: 10, medium: 15, hard: 25 },
+      autoScore: false,
+      allowLateAnswer: false,
+      answerMode: 'organizer',
+      allowPresenterClick: true,
+      timerPresets: [10, 15, 20, 30, 60],
+      /* ---- arena / card rules (Phase 3) ---- */
+      cardRules: {
+        method: 'random-team-random-card',   // 'random-team-random-card' | 'specific-team-random-card' | 'random-card-random-team'
+        allowOtherTeamTurn: false,
+        allowStacking: false,
+        carryOverRounds: true,
+        expireAtEnd: false,
+        maxHold: 99,
+        confirmDraw: true,
+        animateDuration: 3200                  // ms
+      }
+    },
+    teams: defaultTeams(),
+    questions: defaultQuestions(),
+    cards: defaultCards(),
+    cardSupply: {},     // {cardId: remainingCopies} — lazy init
+    cardHistory: [],    // [{id,ts,type,teamId,cardId,note}]
+    live: {
+      status: 'idle',
+      mode: 'turn',
+      questionId: null,
+      teamId: null,
+      revealed: false,
+      hiddenChoices: [],
+      doubleTeam: null,
+      shieldTeams: [],
+      timer: { running: false, endAt: 0, remaining: 0, total: 0 },
+      fx: null,
+      round: 1,
+      countdown: 0,
+      cardFx: null,
+      selectedChoice: null,
+      selectedTeamId: null,
+      answerLocked: false,
+      answerTs: null,
+      timeUp: false,
+      scored: false,
+      firstResponder: null
+    },
+    arena: {
+      mode: 'organizer',          // organizer | public
+      stage: 'idle',              // idle | spinning-team | team-result | spinning-card | card-result | announcement
+      selectedTeamId: null,
+      selectedCardId: null,
+      spinStart: 0,
+      spinDuration: 3200,
+      message: '',
+      subMessage: '',
+      hideCardDuringSpin: true
+    },
+    scoreLog: [],
+    history: []
+  };
+}
+
+/* =====================================================================
+   LOAD / SAVE / SYNC
+   ===================================================================== */
+let state = defaultState();
+
+function ensureCardSupply() {
+  if (!state.cardSupply || typeof state.cardSupply !== 'object') state.cardSupply = {};
+  const n = Math.max(1, activeTeams().length);
+  state.cards.forEach(c => {
+    if (typeof state.cardSupply[c.id] !== 'number') {
+      state.cardSupply[c.id] = Math.max(0, (c.uses || 1) * n);
+    }
+  });
+}
+function ensureCardMaps() {
+  state.teams.forEach(t => {
+    if (!t.cards || typeof t.cards !== 'object') t.cards = {};
+    if (!t.cardsUsed || typeof t.cardsUsed !== 'object') t.cardsUsed = {};
+  });
+}
+function ensureCardRules() {
+  const d = defaultState().settings.cardRules;
+  state.settings.cardRules = Object.assign({}, d, state.settings.cardRules || {});
+}
+
+function loadState() {
+  const raw = readRaw();
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    const base = defaultState();
+    const merged = Object.assign(base, parsed);
+    merged.school = Object.assign(base.school, parsed.school || {});
+    merged.event = Object.assign(base.event, parsed.event || {});
+    merged.settings = Object.assign(base.settings, parsed.settings || {});
+    merged.settings.modes = Object.assign(base.settings.modes, (parsed.settings || {}).modes || {});
+    merged.live = Object.assign(base.live, parsed.live || {});
+    merged.live.timer = Object.assign(base.live.timer, (parsed.live || {}).timer || {});
+    merged.arena = Object.assign(base.arena, parsed.arena || {});
+    if (merged.arena.stage === 'spinning-team' || merged.arena.stage === 'spinning-card') {
+      // stale animation from a previous session — reset
+      merged.arena.stage = 'idle';
+    }
+    if (!Array.isArray(merged.teams) || !merged.teams.length) merged.teams = defaultTeams();
+    if (!Array.isArray(merged.questions)) merged.questions = [];
+    if (!Array.isArray(merged.cards)) merged.cards = [];
+    if (!Array.isArray(merged.scoreLog)) merged.scoreLog = [];
+    if (!Array.isArray(merged.history)) merged.history = [];
+    if (!Array.isArray(merged.cardHistory)) merged.cardHistory = [];
+    if (!merged.cardSupply || typeof merged.cardSupply !== 'object') merged.cardSupply = {};
+    state = merged;
+    ensureCardMaps();
+    ensureCardRules();
+    ensureCardSupply();
+    return merged;
+  } catch (e) { console.error('state parse error', e); return null; }
+}
+
+let _bc = null;
+try { if ('BroadcastChannel' in window) _bc = new BroadcastChannel('brainclash'); } catch (e) {}
+
+function save(broadcast = true) {
+  const ok = writeRaw(JSON.stringify(state));
+  if (!ok) toast('تعذّر الحفظ في المتصفح — تحقق من إعدادات التخزين', 'bad');
+  if (broadcast && _bc) { try { _bc.postMessage({ type: 'state', t: Date.now() }); } catch (e) {} }
+}
+if (_bc) {
+  _bc.onmessage = (e) => {
+    if (e.data && e.data.type === 'state') {
+      const s = loadState();
+      if (s) { safeRender(); }
+    }
+  };
+}
+window.addEventListener('storage', (e) => {
+  if (e.key === LS_KEY) { const s = loadState(); if (s) safeRender(); }
+});
+
+/* =====================================================================
+   UI PRIMITIVES
+   ===================================================================== */
+let toastTimer = null;
+function toast(msg, kind = '') {
+  const wrap = $('#toast');
+  wrap.innerHTML = `<div class="toast-item ${kind}">${esc(msg)}</div>`;
+  wrap.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => wrap.classList.remove('show'), 2600);
+}
+let modalOnClose = null;
+function openModal(title, bodyHTML, footerHTML, opts = {}) {
+  const box = $('#modal-box');
+  box.innerHTML = `
+    <div class="mh"><h3>${esc(title)}</h3>
+      <button class="btn icon ghost" onclick="App.closeModal()">✕</button></div>
+    <div class="mb">${bodyHTML}</div>
+    ${footerHTML ? `<div class="mf">${footerHTML}</div>` : ''}`;
+  if (opts.width) box.style.maxWidth = opts.width; else box.style.maxWidth = '';
+  $('#modal-root').classList.add('on');
+  modalOnClose = opts.onClose || null;
+  if (opts.focus) setTimeout(() => { const f = $('#' + opts.focus); if (f) f.focus(); }, 60);
+}
+function closeModal() {
+  $('#modal-root').classList.remove('on');
+  if (modalOnClose) { const f = modalOnClose; modalOnClose = null; f(); }
+}
+function confirmDialog(title, text, onYes, yesLabel = 'تأكيد', danger = true) {
+  openModal(title, `<p style="line-height:1.9">${text}</p>`,
+    `<button class="btn ${danger ? 'bad' : 'primary'}" id="cf-yes">${esc(yesLabel)}</button>
+     <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`);
+  $('#cf-yes').onclick = () => { closeModal(); onYes(); };
+}
+
+/* =====================================================================
+   ACCESSORS
+   ===================================================================== */
+const getTeam = id => state.teams.find(t => t.id === id);
+const getQuestion = id => state.questions.find(q => q.id === id);
+const getCard = id => state.cards.find(c => c.id === id);
+const activeTeams = () => state.teams.filter(t => t.active);
+const sortedTeams = () => activeTeams().slice().sort((a, b) => b.score - a.score);
+const currentQuestion = () => getQuestion(state.live.questionId);
+function cardUsesLeft(team, cardId) { return (team.cards && team.cards[cardId]) || 0; }
+function cardUsesUsed(team, cardId) { return (team.cardsUsed && team.cardsUsed[cardId]) || 0; }
+
+function isLogged() {
+  try { return sessionStorage.getItem(SESSION_KEY) === 'ok'; } catch (e) { return false; }
+}
+function setLogged(v) {
+  try { v ? sessionStorage.setItem(SESSION_KEY, 'ok') : sessionStorage.removeItem(SESSION_KEY); } catch (e) {}
+}
+
+/* =====================================================================
+   SCORING
+   ===================================================================== */
+function applyScore(teamId, delta, reason, extra = {}) {
+  const t = getTeam(teamId);
+  if (!t) return;
+  t.score += delta;
+  if (extra.correct) t.correct += 1;
+  if (extra.wrong) t.wrong += 1;
+  state.scoreLog.push({
+    id: uid(), ts: Date.now(), teamId, delta,
+    reason: reason || '', correct: extra.correct ? 1 : 0, wrong: extra.wrong ? 1 : 0
+  });
+  if (state.scoreLog.length > 500) state.scoreLog.splice(0, state.scoreLog.length - 500);
+}
+function undoScore() {
+  if (!state.scoreLog.length) { toast('لا يوجد إجراء للتراجع عنه', 'bad'); return; }
+  const last = state.scoreLog.pop();
+  const t = getTeam(last.teamId);
+  if (t) { t.score -= last.delta; t.correct -= last.correct; t.wrong -= last.wrong; }
+  state.live.fx = { id: uid(), type: 'card', text: '↩️ تم التراجع عن آخر إجراء' };
+  save(); safeRender();
+  toast('تم التراجع عن: ' + (last.reason || 'إجراء'), 'ok');
+}
+
+/* =====================================================================
+   TIMER
+   ===================================================================== */
+function timerRemaining() {
+  const t = state.live.timer;
+  if (t.running) return Math.max(0, (t.endAt - Date.now()) / 1000);
+  return Math.max(0, t.remaining);
+}
+function startTimer(seconds) {
+  const t = state.live.timer;
+  let rem = timerRemaining();
+  if (typeof seconds === 'number') rem = seconds;
+  if (rem <= 0) rem = t.total || state.settings.timerDefault;
+  t.total = t.total || rem;
+  t.remaining = rem;
+  t.endAt = Date.now() + rem * 1000;
+  t.running = true;
+  playSound('start');
+}
+function pauseTimer() {
+  const t = state.live.timer;
+  t.remaining = timerRemaining();
+  t.running = false;
+}
+function resetTimer(seconds) {
+  const t = state.live.timer;
+  t.running = false;
+  t.remaining = seconds != null ? seconds : (t.total || state.settings.timerDefault);
+  t.total = t.remaining;
+  t.endAt = 0;
+}
+function addTime(sec) {
+  const t = state.live.timer;
+  if (t.running) t.endAt += sec * 1000;
+  else t.remaining = Math.max(0, t.remaining + sec);
+  t.total = Math.max(t.total, timerRemaining());
+}
+function fmtTime(sec) {
+  sec = Math.max(0, Math.ceil(sec));
+  const m = Math.floor(sec / 60), s = sec % 60;
+  return m > 0 ? `${m}:${String(s).padStart(2, '0')}` : String(s);
+}
+
+let _lastTickSec = -1;
+let _organizerTab = false;
+function isOrganizerTab() { return _organizerTab; }
+
+setInterval(() => {
+  const t = state.live.timer;
+  const rem = timerRemaining();
+  const sec = Math.ceil(rem);
+
+  if (t.running && rem <= 0) {
+    t.running = false; t.remaining = 0;
+    const L = state.live;
+    if (L.status === 'question' && !L.answerLocked && !L.timeUp) {
+      L.timeUp = true;
+      L.fx = { id: 'timeup-' + (L.questionId || '') + '-' + (t.endAt || 0),
+               type: 'wrong', text: '⏰ انتهى الوقت!' };
+      save();
+      if (isOrganizerTab()) playSound('timeout');
+    }
+  }
+  if (t.running && isOrganizerTab() && sec <= 5 && sec > 0 && sec !== _lastTickSec) playSound('tick');
+  _lastTickSec = sec;
+
+  $$('[data-timer-num]').forEach(el => {
+    el.textContent = fmtTime(rem);
+    el.classList.toggle('low', rem <= 10 && rem > 0);
+    el.classList.toggle('warn', rem <= 10 && rem > 0);
+  });
+  $$('[data-timer-bar]').forEach(el => {
+    const total = t.total || 1;
+    el.style.width = clamp((rem / total) * 100, 0, 100) + '%';
+  });
+
+  /* arena spin watchdog */
+  if (state.arena && (state.arena.stage === 'spinning-team' || state.arena.stage === 'spinning-card')) {
+    const elapsed = Date.now() - state.arena.spinStart;
+    if (elapsed > state.arena.spinDuration + 800) {
+      // safety: if org tab failed, transition to result
+      state.arena.stage = state.arena.stage === 'spinning-team' ? 'team-result' : 'card-result';
+      save();
+      safeRender();
+    }
+  }
+}, 200);
+
+/* =====================================================================
+   CARD EFFECT ENGINE (shared by live + arena)
+   ===================================================================== */
+function applyCardEffect(team, card) {
+  if (!team || !card) return { ok: false, msg: 'بيانات ناقصة', manual: false };
+  const L = state.live;
+  let msg = '';
+  let manual = false;
+  switch (card.effect) {
+    case 'double':
+      L.doubleTeam = team.id; msg = 'نقاط مضاعفة للسؤال القادم'; break;
+    case 'extraTime':
+      addTime(card.value || 15); msg = `+${card.value || 15} ثانية`; break;
+    case 'fiftyFifty': {
+      const q = currentQuestion();
+      if (q && q.choices && q.choices.length > 2) {
+        const wrongs = q.choices.map((_, i) => i).filter(i => i !== q.correctIndex);
+        wrongs.sort(() => Math.random() - .5);
+        L.hiddenChoices = wrongs.slice(0, 2);
+        msg = 'حُذفت إجابتان خاطئتان';
+      } else msg = 'لا يوجد سؤال اختيار متعدد مناسب حالياً';
+      break;
+    }
+    case 'bonus':
+      applyScore(team.id, card.value || 10, 'بطاقة: ' + card.name);
+      msg = `+${card.value || 10} نقطة`; break;
+    case 'shield':
+      L.shieldTeams.push(team.id); msg = 'محمي من خصم واحد'; break;
+    case 'mystery': {
+      const outs = [
+        { txt: '+10 نقاط', fn: () => applyScore(team.id, 10, 'بطاقة الغموض') },
+        { txt: '-5 نقاط', fn: () => applyScore(team.id, -5, 'بطاقة الغموض') },
+        { txt: '+15 ثانية', fn: () => addTime(15) },
+        { txt: 'لا شيء!', fn: () => {} }
+      ];
+      const o = outs[Math.floor(Math.random() * outs.length)];
+      o.fn(); msg = o.txt; break;
+    }
+    default:
+      msg = 'تُطبَّق يدوياً بواسطة المنظّم';
+      manual = true;
+  }
+  return { ok: true, msg, manual };
+}
+
+/* Checks rules before activation. Returns {ok, reason} */
+function canActivateCard(team, card) {
+  if (!team || !card) return { ok: false, reason: 'بيانات ناقصة' };
+  if (cardUsesLeft(team, card.id) <= 0) return { ok: false, reason: 'لا توجد نسخ متاحة لهذا الفريق' };
+  const L = state.live;
+  const rules = state.settings.cardRules;
+  const turnTeam = L.teamId;
+  if (!rules.allowOtherTeamTurn && turnTeam && turnTeam !== team.id && L.status === 'question') {
+    return { ok: false, reason: 'البطاقات مسموحة فقط في دور الفريق نفسه' };
+  }
+  if (card.requireQuestion !== false && !currentQuestion() && ['fiftyFifty','extraTime','double'].includes(card.effect)) {
+    return { ok: false, reason: 'يلزم وجود سؤال نشط لهذا التأثير' };
+  }
+  return { ok: true };
+}
+
+/* =====================================================================
+   ROUTER
+   ===================================================================== */
+const TABS = [
+  ['overview', '📊', 'نظرة عامة'],
+  ['teams', '👥', 'إدارة الفرق'],
+  ['questions', '❓', 'بنك الأسئلة'],
+  ['cards', '🃏', 'البطاقات'],
+  ['setup', '⚙️', 'الإعدادات'],
+  ['live', '🎮', 'التحكم المباشر'],
+  ['scores', '🏆', 'النتائج'],
+  ['settings', '🔧', 'النسخ']
+];
+function currentRoute() { return location.hash || '#/'; }
+function safeRender() { try { render(); } catch (e) { console.error(e); } }
+
+function render() {
+  const hash = currentRoute();
+  $$('.view').forEach(v => v.classList.remove('active'));
+
+  if (hash.startsWith('#/present')) {
+    _organizerTab = false;
+    $('#view-present').classList.add('active');
+    renderPresent();
+  } else if (hash.startsWith('#/arena')) {
+    _organizerTab = false;
+    $('#view-arena').classList.add('active');
+    renderArena();
+  } else if (hash.startsWith('#/login')) {
+    _organizerTab = false;
+    $('#view-login').classList.add('active');
+    renderLogin();
+  } else if (hash.startsWith('#/leaderboard')) {
+    _organizerTab = false;
+    $('#view-leaderboard').classList.add('active');
+    renderPublicLeaderboard();
+  } else if (hash.startsWith('#/team/')) {
+    _organizerTab = false;
+    $('#view-team').classList.add('active');
+    renderTeamPage(hash.split('/')[2]);
+  } else if (hash.startsWith('#/dash')) {
+    if (!isLogged()) { location.hash = '#/login'; return; }
+    _organizerTab = true;
+    $('#view-dash').classList.add('active');
+    renderDash();
+  } else {
+    _organizerTab = false;
+    $('#view-home').classList.add('active');
+    renderHome();
+  }
+}
+window.addEventListener('hashchange', () => render());
+
+/* =====================================================================
+   HOME / LOGIN
+   ===================================================================== */
+function schoolLogo() { return state.school.logo || makeLogo('🧠', '#3b6bff'); }
+function renderHome() {
+  $('#home-logo').src = schoolLogo();
+  $('#login-logo').src = schoolLogo();
+  $('#home-school').textContent = state.school.name;
+  $('#home-audience').textContent = state.event.audience;
+  $('#home-supervisor').textContent = state.event.supervisor;
+  $('#home-teams').innerHTML = activeTeams().map(t => `
+    <div class="mini-team"><img src="${esc(t.logo)}" alt=""><span>${esc(t.name)}</span></div>`).join('');
+}
+function renderLogin() {
+  $('#login-logo').src = schoolLogo();
+  $('#lg-err').textContent = '';
+  $('#login-hint').innerHTML = storageOK
+    ? `بيانات الدخول الافتراضية: <b>admin</b> / <b>1234</b> — غيّرها من «الإعدادات» بعد أول دخول.`
+    : `<b style="color:#ffb3c1">تنبيه:</b> التخزين المحلي معطّل. شغّل الموقع عبر سيرفر محلي (http).`;
+}
+async function doLogin() {
+  const u = $('#lg-user').value.trim();
+  const p = $('#lg-pass').value;
+  const err = $('#lg-err');
+  err.textContent = '';
+  if (!u || !p) { err.textContent = 'أدخل اسم المستخدم وكلمة المرور'; return; }
+  const hash = await sha256(SALT + p);
+  if (u === state.auth.username && hash === state.auth.passHash) {
+    setLogged(true);
+    playSound('start');
+    location.hash = '#/dash/overview';
+    render();
+  } else {
+    err.textContent = 'بيانات الدخول غير صحيحة';
+    playSound('wrong');
+  }
+}
+
+/* =====================================================================
+   DASHBOARD SHELL
+   ===================================================================== */
+function currentTab() {
+  const m = currentRoute().match(/^#\/dash\/?([a-z]*)/);
+  const tab = m && m[1] ? m[1] : 'overview';
+  return TABS.some(t => t[0] === tab) ? tab : 'overview';
+}
+function renderDash() {
+  $('#dash-logo').src = schoolLogo();
+  $('#dash-sound').textContent = state.settings.sound ? '🔊' : '🔇';
+  const tab = currentTab();
+  const statusMap = { idle: 'لم تبدأ', countdown: 'استعداد', question: 'جارية', finished: 'منتهية' };
+  const st = $('#dash-status');
+  st.textContent = 'الحالة: ' + (statusMap[state.live.status] || '—');
+  st.className = 'badge ' + (state.live.status === 'question' ? 'ok' : state.live.status === 'finished' ? 'gold' : '');
+
+  $('#dash-nav').innerHTML = TABS.map(([id, ico, label]) =>
+    `<a href="#/dash/${id}" class="${id === tab ? 'on' : ''}"><span class="ico">${ico}</span>${label}</a>`
+  ).join('');
+
+  const c = $('#dash-content');
+  const fn = { overview: tabOverview, teams: tabTeams, questions: tabQuestions, cards: tabCards,
+               setup: tabSetup, live: tabLive, scores: tabScores, settings: tabSettings }[tab];
+  c.innerHTML = fn ? fn() : '';
+}
+
+/* =====================================================================
+   TAB: OVERVIEW
+   ===================================================================== */
+function tabOverview() {
+  const teams = sortedTeams();
+  const leader = teams[0];
+  return `
+  <div class="panel-title"><h2>📊 نظرة عامة</h2><div class="spacer"></div>
+    <button class="btn purple sm" onclick="App.go('#/arena')">🃏 ساحة البطاقات</button>
+    <button class="btn primary sm" onclick="App.go('#/dash/live')">🎮 إلى التحكم المباشر</button>
+  </div>
+  <div class="stats" style="margin-bottom:1.2rem">
+    <div class="stat"><div class="k">الفرق المشاركة</div><div class="v cy">${activeTeams().length}</div></div>
+    <div class="stat"><div class="k">عدد الأسئلة</div><div class="v pu">${state.questions.length}</div></div>
+    <div class="stat"><div class="k">البطاقات</div><div class="v gd">${state.cards.length}</div></div>
+    <div class="stat"><div class="k">بطاقات مسحوبة</div><div class="v">${state.cardHistory.filter(h => h.type === 'draw').length}</div></div>
+    <div class="stat"><div class="k">الجولة الحالية</div><div class="v">${state.live.round}</div></div>
+    <div class="stat"><div class="k">المتصدر</div><div class="v" style="font-size:1.05rem">${leader ? esc(leader.name) : '—'}</div></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+    <div class="card pad">
+      <h3 style="margin-bottom:.8rem">🏅 ترتيب الفرق</h3>
+      ${teams.length ? `<table><thead><tr><th>#</th><th>الفريق</th><th>النقاط</th><th>🃏</th></tr></thead><tbody>
+        ${teams.map((t, i) => `<tr>
+          <td><span class="rank ${i === 0 ? 'g1' : i === 1 ? 'g2' : i === 2 ? 'g3' : ''}">${i + 1}</span></td>
+          <td><div class="row" style="gap:.5rem"><img src="${esc(t.logo)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover">
+            <b>${esc(t.name)}</b></div></td>
+          <td style="font-weight:900;color:#ffd977">${t.score}</td>
+          <td class="muted">${Object.values(t.cards || {}).reduce((a, b) => a + b, 0)}</td>
+        </tr>`).join('')}
+      </tbody></table>` : '<p class="muted">لا توجد فرق بعد.</p>'}
+    </div>
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.8rem">⚡ إجراءات سريعة</h3>
+      <div class="grid" style="gap:.55rem">
+        <button class="btn purple block" onclick="App.go('#/arena')">🃏 افتح ساحة البطاقات</button>
+        <button class="btn primary block" onclick="App.live.startQuestion()">▶️ ابدأ السؤال</button>
+        <button class="btn ghost block" onclick="App.openPresent()">🖥️ شاشة العرض</button>
+        <button class="btn gold block" onclick="App.live.finish()">🏁 إنهاء المسابقة</button>
+      </div>
+      <div class="hint" style="margin-top:.9rem">
+        <span class="kbd">Space</span> تشغيل/إيقاف المؤقت · <span class="kbd">Esc</span> إغلاق ملء الشاشة
+      </div>
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   TAB: TEAMS
+   ===================================================================== */
+function tabTeams() {
+  const teams = state.teams;
+  return `
+  <div class="panel-title"><h2>👥 إدارة الفرق</h2><div class="spacer"></div>
+    <button class="btn ghost sm" onclick="App.go('#/arena')">🃏 الساحة</button>
+    <button class="btn primary sm" onclick="App.teams.edit(null)">＋ فريق جديد</button>
+  </div>
+  ${teams.length ? `<div class="teams-grid">
+    ${teams.map(t => `
+      <div class="team-card" style="--tc:${esc(t.color)}">
+        <div class="glow"></div>
+        <div class="head">
+          <img src="${esc(t.logo)}" alt="">
+          <div style="flex:1;min-width:0">
+            <div class="nm">${esc(t.name)} ${t.active ? '' : '<span class="badge bad" style="font-size:.6rem">معطّل</span>'}</div>
+            <div class="sc">${t.score}</div>
+          </div>
+        </div>
+        <div class="mem">${t.members && t.members.length ? '👤 ' + t.members.map(esc).join(' • ') : '<span class="muted">لا يوجد أعضاء مسجلون</span>'}</div>
+        <div class="row tiny muted" style="margin-top:.5rem;gap:.7rem">
+          <span>✓ ${t.correct}</span><span>✗ ${t.wrong}</span>
+          <span>🃏 ${Object.values(t.cards || {}).reduce((a, b) => a + b, 0)}</span>
+        </div>
+        <div class="foot">
+          <button class="btn xs ghost" onclick="App.teams.edit('${t.id}')">✏️ تعديل</button>
+          <button class="btn xs ghost" onclick="App.teams.score('${t.id}')">💯 نقاط</button>
+          <button class="btn xs ghost" onclick="App.teams.cards('${t.id}')">🃏 بطاقات</button>
+          <button class="btn xs bad" onclick="App.teams.del('${t.id}')">🗑</button>
+        </div>
+      </div>`).join('')}
+  </div>` : `<div class="card pad" style="text-align:center;padding:2.5rem">
+      <p class="muted">لا توجد فرق. أضف فريقاً للبدء.</p></div>`}`;
+}
+
+/* =====================================================================
+   TAB: QUESTIONS (compact)
+   ===================================================================== */
+const FORMAT_LABEL = { mcq: 'اختيار متعدد', open: 'إجابة مفتوحة', tf: 'صح/خطأ', quick: 'إجابة سريعة', custom: 'مخصص' };
+const DIFF_LABEL = { easy: 'سهل', medium: 'متوسط', hard: 'صعب' };
+
+function tabQuestions() {
+  const cats = [...new Set(state.questions.map(q => q.category).filter(Boolean))];
+  return `
+  <div class="panel-title"><h2>❓ بنك الأسئلة</h2><div class="spacer"></div>
+    <button class="btn ghost sm" onclick="App.q.exportJSON()">⬇️ تصدير</button>
+    <button class="btn ghost sm" onclick="App.q.importJSON()">⬆️ استيراد</button>
+    <button class="btn primary sm" onclick="App.q.edit(null)">＋ سؤال جديد</button>
+  </div>
+  <div class="card pad" style="margin-bottom:1rem">
+    <div class="row">
+      <input class="input" id="q-search" placeholder="🔍 ابحث..." style="flex:2;min-width:180px" oninput="App.q.filter()">
+      <select class="select" id="q-fcat" style="flex:1;min-width:130px" onchange="App.q.filter()">
+        <option value="">كل التصنيفات</option>
+        ${cats.map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join('')}
+      </select>
+      <select class="select" id="q-fdiff" style="flex:1;min-width:120px" onchange="App.q.filter()">
+        <option value="">كل المستويات</option>
+        <option value="easy">سهل</option><option value="medium">متوسط</option><option value="hard">صعب</option>
+      </select>
+    </div>
+  </div>
+  <div id="q-list">${questionRows()}</div>`;
+}
+function questionRows() {
+  if (!state.questions.length) return `<div class="card pad" style="text-align:center;padding:2.5rem"><p class="muted">لا توجد أسئلة بعد.</p></div>`;
+  return state.questions.map((q, i) => `
+    <div class="qrow" data-qid="${q.id}">
+      <div class="idx">${i + 1}</div>
+      <div class="txt"><div class="t">${esc(q.text || '(بدون نص)')}</div>
+        <div class="m"><span class="badge">${esc(FORMAT_LABEL[q.format] || q.format)}</span>
+          <span class="badge gold">${q.points} نقطة</span>
+          <span class="badge purple">${esc(DIFF_LABEL[q.difficulty] || q.difficulty)}</span>
+          <span>⏱ ${q.timeLimit}ث</span></div></div>
+      <div class="acts">
+        <button class="btn xs ghost" onclick="App.q.move('${q.id}',-1)">▲</button>
+        <button class="btn xs ghost" onclick="App.q.move('${q.id}',1)">▼</button>
+        <button class="btn xs ghost" onclick="App.q.preview('${q.id}')">👁</button>
+        <button class="btn xs ghost" onclick="App.q.edit('${q.id}')">✏️</button>
+        <button class="btn xs ghost" onclick="App.q.dup('${q.id}')">⧉</button>
+        <button class="btn xs bad" onclick="App.q.del('${q.id}')">🗑</button>
+      </div>
+    </div>`).join('');
+}
+
+/* =====================================================================
+   TAB: CARDS
+   ===================================================================== */
+const EFFECT_LABEL = {
+  double: 'نقاط مضاعفة', extraTime: 'وقت إضافي', fiftyFifty: 'حذف إجابتين',
+  bonus: 'نقاط إضافية', shield: 'درع الحماية', steal: 'سرقة الدور',
+  challenge: 'التحدي المزدوج', mystery: 'الغموض', golden: 'السؤال الذهبي',
+  rescue: 'بطاقة الإنقاذ', manual: 'يدوي'
+};
+function tabCards() {
+  return `
+  <div class="panel-title"><h2>🃏 البطاقات التكتيكية</h2><div class="spacer"></div>
+    <button class="btn purple sm" onclick="App.go('#/arena')">🏟️ افتح الساحة</button>
+    <button class="btn primary sm" onclick="App.cards.edit(null)">＋ بطاقة جديدة</button>
+  </div>
+  <div class="hint" style="margin-bottom:1rem">
+    أنشئ بطاقاتك بالكامل ثم افتح <b>ساحة البطاقات</b> لسحبها وتوزيعها بأنيميشن احتفالي.
+    كل بطاقة تُثبت في مخزون الفريق حتى تُستخدم أو تُحذف يدوياً.
+  </div>
+  <div class="cards-grid">
+    ${state.cards.map(c => {
+      const supply = state.cardSupply[c.id];
+      return `
+      <div class="tcard" style="background:linear-gradient(160deg,${esc(c.color)}dd,${esc(c.color)}44)">
+        <div class="sheen"></div>
+        <div class="cn">${esc(c.emoji || '🃏')} ${esc(c.name)}</div>
+        <div class="cd">${esc(c.desc)}</div>
+        <div class="cf">
+          <span>${esc(EFFECT_LABEL[c.effect] || c.effect)}</span>
+          <span>×${c.uses} / مخزون: ${typeof supply === 'number' ? supply : '—'}</span>
+        </div>
+        <div class="foot" style="display:flex;gap:.3rem;margin-top:.6rem;position:relative;z-index:1">
+          <button class="btn xs ghost" onclick="App.cards.edit('${c.id}')">✏️</button>
+          <button class="btn xs ghost" onclick="App.cards.replenish('${c.id}')">＋ مخزون</button>
+          <button class="btn xs bad" onclick="App.cards.del('${c.id}')">🗑</button>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+
+/* =====================================================================
+   TAB: SETUP
+   ===================================================================== */
+function tabSetup() {
+  const s = state.settings;
+  const R = s.cardRules;
+  return `
+  <div class="panel-title"><h2>⚙️ الإعدادات والقواعد</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">🏫 بيانات الفعالية</h3>
+      <div class="field"><label>اسم المدرسة</label><input class="input" id="ev-school" value="${esc(state.school.name)}"></div>
+      <div class="field"><label>شعار المدرسة</label><input type="file" accept="image/*" onchange="App.uploadSchoolLogo(this)"></div>
+      <div class="field"><label>عنوان المسابقة</label><input class="input" id="ev-title" value="${esc(state.event.title)}"></div>
+      <div class="field"><label>الشعار</label><input class="input" id="ev-slogan" value="${esc(state.event.slogan)}"></div>
+      <div class="field"><label>الفئة المستهدفة</label><input class="input" id="ev-audience" value="${esc(state.event.audience)}"></div>
+      <div class="field"><label>المشرف</label><input class="input" id="ev-supervisor" value="${esc(state.event.supervisor)}"></div>
+      <button class="btn primary block" onclick="App.saveEvent()">💾 حفظ</button>
+    </div>
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">⚡ إعدادات المؤقت والإجابة</h3>
+      <label class="check" style="margin-bottom:.6rem"><input type="checkbox" id="st-autoscore" ${s.autoScore ? 'checked' : ''}><span>تصحيح تلقائي</span></label>
+      <label class="check" style="margin-bottom:.6rem"><input type="checkbox" id="st-late" ${s.allowLateAnswer ? 'checked' : ''}><span>السماح بعد الوقت</span></label>
+      <label class="check" style="margin-bottom:.6rem"><input type="checkbox" id="st-click" ${s.allowPresenterClick ? 'checked' : ''}><span>النقر على الإجابات في العرض</span></label>
+      <div class="field"><label>مدة المؤقت الافتراضية</label>
+        <input class="input" type="number" id="st-timer" min="5" max="600" value="${s.timerDefault}"></div>
+      <button class="btn primary block" onclick="App.saveSettings()">💾 حفظ</button>
+    </div>
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">🃏 قواعد البطاقات</h3>
+      <div class="field"><label>طريقة السحب</label>
+        <select class="select" id="cr-method">
+          <option value="random-team-random-card" ${R.method === 'random-team-random-card' ? 'selected' : ''}>فريق عشوائي ← بطاقة عشوائية</option>
+          <option value="specific-team-random-card" ${R.method === 'specific-team-random-card' ? 'selected' : ''}>فريق محدد ← بطاقة عشوائية</option>
+          <option value="random-card-random-team" ${R.method === 'random-card-random-team' ? 'selected' : ''}>بطاقة عشوائية ← فريق عشوائي</option>
+        </select></div>
+      <label class="check" style="margin-bottom:.55rem"><input type="checkbox" id="cr-other" ${R.allowOtherTeamTurn ? 'checked' : ''}><span>السماح باستخدام البطاقات في دور فريق آخر</span></label>
+      <label class="check" style="margin-bottom:.55rem"><input type="checkbox" id="cr-stack" ${R.allowStacking ? 'checked' : ''}><span>السماح بدمج أكثر من بطاقة</span></label>
+      <label class="check" style="margin-bottom:.55rem"><input type="checkbox" id="cr-carry" ${R.carryOverRounds ? 'checked' : ''}><span>ترحيل البطاقات بين الجولات</span></label>
+      <label class="check" style="margin-bottom:.55rem"><input type="checkbox" id="cr-expire" ${R.expireAtEnd ? 'checked' : ''}><span>انتهاء صلاحية البطاقات بنهاية الفعالية</span></label>
+      <label class="check" style="margin-bottom:.55rem"><input type="checkbox" id="cr-confirm" ${R.confirmDraw ? 'checked' : ''}><span>تأكيد قبل تنفيذ السحب</span></label>
+      <div class="field"><label>الحد الأقصى لبطاقات الفريق</label>
+        <input class="input" type="number" id="cr-max" min="1" max="999" value="${R.maxHold}"></div>
+      <div class="field"><label>مدة الأنيميشن (مللي ثانية)</label>
+        <input class="input" type="number" id="cr-dur" min="800" max="8000" step="100" value="${R.animateDuration}"></div>
+      <button class="btn primary block" onclick="App.saveCardRules()">💾 حفظ قواعد البطاقات</button>
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   TAB: LIVE
+   ===================================================================== */
+function tabLive() {
+  const L = state.live;
+  const q = currentQuestion();
+  const teams = activeTeams();
+  const rem = timerRemaining();
+  const selTeam = getTeam(L.teamId);
+  const answerTeam = getTeam(L.selectedTeamId || L.teamId);
+  const isOpen = q && (q.format === 'open' || q.format === 'quick');
+  const isChoice = q && !isOpen;
+  const clickable = !L.answerLocked && !L.scored && L.teamId;
+  const isTimeUp = L.timeUp || (!L.timer.running && rem <= 0 && L.status === 'question' && !L.answerLocked);
+
+  const banner = !q ? `<div class="live-state-banner waiting">💡 اختر سؤالاً للبدء</div>`
+    : L.scored ? `<div class="live-state-banner scored">✅ تم احتساب السؤال</div>`
+    : L.answerLocked ? `<div class="live-state-banner locked">🔒 تم تسجيل إجابة ${esc((answerTeam||{}).name||'')}</div>`
+    : isTimeUp ? `<div class="live-state-banner timeup">⏰ انتهى الوقت — يمكنك التقييم اليدوي</div>`
+    : !L.teamId ? `<div class="live-state-banner waiting">👥 اختر الفريق المجيب</div>`
+    : `<div class="live-state-banner answering">🎯 ${esc(selTeam ? selTeam.name : '')} يجيب الآن</div>`;
+
+  return `
+  <div class="panel-title"><h2>🎮 التحكم المباشر</h2><div class="spacer"></div>
+    <span class="badge ${L.status === 'question' ? 'ok' : ''}">${L.status === 'question' ? 'سؤال نشط' : 'متوقفة'}</span>
+    <button class="btn sm purple" onclick="App.go('#/arena')">🃏 الساحة</button>
+    <button class="btn sm ghost" onclick="App.openPresent()">🖥️ العرض</button>
+  </div>
+
+  <div class="live-grid">
+    <div>
+      <div class="card pad" style="margin-bottom:1rem">
+        <div class="row" style="margin-bottom:.8rem">
+          <button class="btn primary sm" onclick="App.live.startQuestion()">▶️ ابدأ السؤال</button>
+          <button class="btn sm ghost" onclick="App.live.prev()">◀ السابق</button>
+          <button class="btn sm ghost" onclick="App.live.next()">التالي ▶</button>
+          <button class="btn sm purple" onclick="App.live.random()">🎲 عشوائي</button>
+        </div>
+        ${banner}
+        <div class="qbox">
+          ${q ? `
+            <div class="row tiny" style="margin-bottom:.6rem">
+              <span class="badge">${esc(FORMAT_LABEL[q.format])}</span>
+              <span class="badge gold">${q.points} نقطة</span>
+              <span class="badge purple">${esc(q.category)}</span>
+            </div>
+            <div class="qtext">${esc(q.text)}</div>
+            ${q.image ? `<img src="${esc(q.image)}" style="max-height:170px;border-radius:12px;margin-top:.8rem">` : ''}
+            ${isChoice ? `<div class="choices">
+              ${(q.choices || []).map((ch, i) => {
+                const isCorrect = i === q.correctIndex;
+                const showCorrect = L.revealed && isCorrect;
+                const hidden = L.hiddenChoices.includes(i);
+                const selected = L.selectedChoice === i && L.answerLocked;
+                const cls = [showCorrect ? 'correct' : '', hidden ? 'hidden' : '', selected ? 'selected' : ''].filter(Boolean).join(' ');
+                return `<div class="choice ${cls}" onclick="App.live.organizerSelect(${i})">
+                  <span class="k">${'أبجدهو'[i] || i + 1}</span><span>${esc(ch)}</span>
+                  ${showCorrect ? '<span style="margin-right:auto">✅</span>' : ''}
+                  ${selected ? '<span style="margin-right:auto">🎯</span>' : ''}
+                </div>`;
+              }).join('')}
+            </div>` : ''}
+            ${isOpen ? `<div class="hint" style="margin-top:.8rem">الإجابة: <b style="color:#9df3c8">${esc(q.correctText || '—')}</b></div>` : ''}
+          ` : `<div style="text-align:center;padding:1.5rem" class="muted">اختر سؤالاً للبدء.</div>`}
+        </div>
+        <div class="row" style="margin-top:.9rem">
+          <button class="btn ${L.revealed ? 'gold' : 'primary'} sm" onclick="App.live.reveal()">
+            ${L.revealed ? '🙈 إخفاء' : '👁 كشف'}</button>
+          <button class="btn ghost sm" onclick="App.live.skip()">⏭ تخطي</button>
+          <button class="btn ghost sm" onclick="App.live.clearSelection()">↺ مسح الإجابة</button>
+        </div>
+      </div>
+
+      <div class="card pad">
+        <h3 style="margin-bottom:.8rem">💯 تسجيل النقاط</h3>
+        <div class="team-chips">
+          ${teams.map(t => `<div class="tchip ${L.teamId === t.id ? 'on' : ''}" onclick="App.live.pickTeam('${t.id}')">
+            <img src="${esc(t.logo)}"><span>${esc(t.name)}</span></div>`).join('')}
+        </div>
+        <div class="row" style="margin-top:.9rem">
+          <button class="btn ok" onclick="App.live.correct()" ${L.scored ? 'disabled' : ''}>✅ إجابة صحيحة</button>
+          <button class="btn bad" onclick="App.live.wrong()" ${L.scored ? 'disabled' : ''}>❌ إجابة خاطئة</button>
+          <button class="btn ghost" onclick="App.live.undo()">↩️ تراجع</button>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card pad" style="margin-bottom:1rem;text-align:center">
+        <div class="timer-big ${rem <= 10 && rem > 0 ? 'warn' : ''}" data-timer-num>${fmtTime(rem)}</div>
+        <div class="bar"><i data-timer-bar style="width:${clamp(rem / (state.live.timer.total || 1) * 100, 0, 100)}%"></i></div>
+        <div class="row" style="margin-top:.9rem;justify-content:center">
+          <button class="btn primary sm" onclick="App.live.toggleTimer()">
+            ${state.live.timer.running ? '⏸ إيقاف' : '▶️ تشغيل'}</button>
+          <button class="btn ghost sm" onclick="App.live.resetTimer()">🔄 تصفير</button>
+          <button class="btn ghost sm" onclick="App.live.addTime(15)">+15ث</button>
+        </div>
+      </div>
+
+      <div class="card pad" style="margin-bottom:1rem">
+        <h3 style="margin-bottom:.7rem">🎬 التحكم</h3>
+        <div class="grid" style="gap:.55rem">
+          <button class="btn ghost block sm" onclick="App.live.countdown()">⏳ عدّ تنازلي</button>
+          <button class="btn ghost block sm" onclick="App.live.nextRound()">🔄 جولة جديدة</button>
+          <button class="btn gold block sm" onclick="App.live.finish()">🏁 إنهاء المسابقة</button>
+          <button class="btn bad block sm" onclick="App.resetScores()">♻️ تصفير النقاط</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   TAB: SCORES
+   ===================================================================== */
+function tabScores() {
+  const teams = sortedTeams();
+  return `
+  <div class="panel-title"><h2>🏆 النتائج</h2><div class="spacer"></div>
+    <button class="btn ghost sm" onclick="App.go('#/leaderboard')">👁 عرض عام</button>
+    <button class="btn ghost sm" onclick="window.print()">🖨 طباعة</button>
+  </div>
+  <div class="card pad" style="margin-bottom:1rem">
+    <h3 style="margin-bottom:.8rem">الترتيب</h3>
+    ${teams.length ? `<table>
+      <thead><tr><th>#</th><th>الفريق</th><th>النقاط</th><th>✓</th><th>✗</th><th>🃏</th></tr></thead>
+      <tbody>${teams.map((t, i) => `<tr>
+        <td><span class="rank ${i === 0 ? 'g1' : i === 1 ? 'g2' : i === 2 ? 'g3' : ''}">${i + 1}</span></td>
+        <td><div class="row" style="gap:.5rem"><img src="${esc(t.logo)}" style="width:30px;height:30px;border-radius:50%;object-fit:cover"><b>${esc(t.name)}</b></div></td>
+        <td style="font-weight:900;color:#ffd977">${t.score}</td>
+        <td class="muted">${t.correct}</td><td class="muted">${t.wrong}</td>
+        <td class="muted">${Object.values(t.cards || {}).reduce((a, b) => a + b, 0)}</td>
+      </tr>`).join('')}</tbody></table>` : '<p class="muted">لا توجد فرق.</p>'}
+  </div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(340px,1fr))">
+    <div class="card pad">
+      <h3 style="margin-bottom:.7rem">📜 سجل النقاط</h3>
+      ${state.scoreLog.length ? `<div style="max-height:340px;overflow:auto">
+        <table><thead><tr><th>الوقت</th><th>الفريق</th><th>+/-</th><th>السبب</th></tr></thead><tbody>
+        ${state.scoreLog.slice().reverse().slice(0, 60).map(l => {
+          const t = getTeam(l.teamId);
+          return `<tr><td class="tiny muted">${new Date(l.ts).toLocaleTimeString('ar')}</td>
+            <td>${esc(t ? t.name : '—')}</td>
+            <td style="font-weight:900;color:${l.delta >= 0 ? '#7bf0b8' : '#ffa1b1'}">${l.delta > 0 ? '+' : ''}${l.delta}</td>
+            <td class="tiny muted">${esc(l.reason)}</td></tr>`;
+        }).join('')}</tbody></table></div>` : '<p class="muted tiny">لا توجد حركات.</p>'}
+    </div>
+    <div class="card pad">
+      <h3 style="margin-bottom:.7rem">🃏 سجل البطاقات (آخر 30)</h3>
+      ${state.cardHistory.length ? `<div class="arena-history">
+        ${state.cardHistory.slice().reverse().slice(0, 30).map(h => {
+          const t = getTeam(h.teamId), c = getCard(h.cardId);
+          const icons = { draw: '🎴', assign: '📥', activate: '⚡', grant: '＋', remove: '🗑', transfer: '⇄', 'team-select': '🎯' };
+          return `<div class="hrow"><span class="t">${new Date(h.ts).toLocaleTimeString('ar')}</span>
+            <span class="ic">${icons[h.type] || '·'}</span>
+            <span class="txt">${esc(t ? t.name : '—')}${c ? ' · ' + esc(c.name) : ''}</span></div>`;
+        }).join('')}
+      </div>` : '<p class="muted tiny">لا توجد حركات.</p>'}
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   TAB: SETTINGS
+   ===================================================================== */
+function tabSettings() {
+  return `
+  <div class="panel-title"><h2>🔧 الإعدادات</h2></div>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">🔐 دخول المنظّم</h3>
+      <div class="field"><label>اسم المستخدم</label><input class="input" id="ac-user" value="${esc(state.auth.username)}"></div>
+      <div class="field"><label>كلمة المرور الجديدة</label><input class="input" type="password" id="ac-pass" placeholder="اتركها فارغة"></div>
+      <div class="field"><label>تأكيد كلمة المرور</label><input class="input" type="password" id="ac-pass2"></div>
+      <button class="btn primary block" onclick="App.changeCreds()">💾 تحديث</button>
+      <div class="hint warn" style="margin-top:.9rem">الحماية في هذه النسخة واجهة-فقط (بدون سيرفر). للاستخدام الحقيقي أضف مصادقة خلفية.</div>
+    </div>
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">💾 النسخ الاحتياطي</h3>
+      <button class="btn primary block" style="margin-bottom:.55rem" onclick="App.exportBackup()">⬇️ تصدير JSON</button>
+      <label class="btn ghost block" style="margin-bottom:.55rem;cursor:pointer">⬆️ استيراد
+        <input type="file" accept="application/json,.json" style="display:none" onchange="App.importBackup(this)"></label>
+      <hr>
+      <button class="btn ghost block sm" style="margin-bottom:.5rem" onclick="App.resetScores()">♻️ تصفير النقاط</button>
+      <button class="btn ghost block sm" style="margin-bottom:.5rem" onclick="App.clearScoreLog()">📜 مسح سجل النقاط</button>
+      <button class="btn bad block sm" onclick="App.factoryReset()">⚠️ إعادة ضبط المصنع</button>
+    </div>
+
+    <div class="card pad">
+      <h3 style="margin-bottom:.9rem">ℹ️ حالة النظام</h3>
+      <p class="sm-t" style="line-height:2">
+        التخزين: <b style="color:${storageOK ? '#7bf0b8' : '#ffa1b1'}">${storageOK ? 'يعمل ✅' : 'معطّل ❌'}</b><br>
+        المزامنة: <b style="color:${_bc ? '#7bf0b8' : '#ffdf9a'}">${_bc ? 'مفعّلة ✅' : 'غير مدعومة'}</b><br>
+        الأسئلة: <b>${state.questions.length}</b><br>
+        الفرق: <b>${state.teams.length}</b><br>
+        البطاقات: <b>${state.cards.length}</b><br>
+        سجل البطاقات: <b>${state.cardHistory.length}</b><br>
+        الإصدار: <b>v3.0 (Arena)</b>
+      </p>
+      <div class="hint" style="margin-top:.9rem">افتح <b>ساحة البطاقات</b> في تبويب كامل الشاشة على البروجكتر بوضع «العرض العام».</div>
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   PUBLIC LEADERBOARD
+   ===================================================================== */
+function renderPublicLeaderboard() {
+  const teams = sortedTeams();
+  $('#public-lb').innerHTML = teams.length ? `<table>
+    <thead><tr><th>#</th><th>الفريق</th><th>النقاط</th><th>✓</th><th>✗</th></tr></thead>
+    <tbody>${teams.map((t, i) => `<tr>
+      <td><span class="rank ${i === 0 ? 'g1' : i === 1 ? 'g2' : i === 2 ? 'g3' : ''}">${i + 1}</span></td>
+      <td><div class="row" style="gap:.6rem"><img src="${esc(t.logo)}" style="width:42px;height:42px;border-radius:50%;object-fit:cover">
+        <b style="font-size:1.05rem">${esc(t.name)}</b></div></td>
+      <td style="font-weight:900;color:#ffd977;font-size:1.35rem">${t.score}</td>
+      <td class="muted">${t.correct}</td><td class="muted">${t.wrong}</td>
+    </tr>`).join('')}</tbody></table>` : '<p class="muted">لا توجد فرق.</p>';
+}
+
+/* =====================================================================
+   TEAM DEVICE
+   ===================================================================== */
+function renderTeamPage(teamId) {
+  const t = getTeam(teamId);
+  const L = state.live;
+  const q = currentQuestion();
+  const el = $('#team-page');
+  if (!t) { el.innerHTML = `<div class="hint bad">فريق غير موجود</div>`; return; }
+  if (!q || L.status !== 'question') {
+    el.innerHTML = `
+      <img src="${esc(t.logo)}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid ${esc(t.color)}">
+      <h2 style="font-weight:900">${esc(t.name)}</h2>
+      <div class="hint" style="max-width:500px">بانتظار بدء السؤال.</div>`;
+    return;
+  }
+  const isOpen = q.format === 'open' || q.format === 'quick';
+  if (isOpen) {
+    el.innerHTML = `
+      <img src="${esc(t.logo)}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid ${esc(t.color)}">
+      <h2>${esc(t.name)}</h2>
+      <div class="hint" style="max-width:500px">سؤال مفتوح — أجب شفهياً.</div>`;
+    return;
+  }
+  const canSubmit = L.teamId === teamId && !L.answerLocked && !L.timeUp && L.timer.running && timerRemaining() > 0;
+  const chosen = L.selectedChoice;
+  const isChosen = L.answerLocked && L.selectedTeamId === teamId;
+  el.innerHTML = `
+    <img src="${esc(t.logo)}" style="width:90px;height:90px;border-radius:50%;object-fit:cover;border:3px solid ${esc(t.color)}">
+    <h2 style="font-weight:900">${esc(t.name)}</h2>
+    <div class="tiny muted">${L.teamId === teamId ? 'الدور لهذا الفريق' : 'ليس دور هذا الفريق'}</div>
+    <div class="timer-big" data-timer-num style="font-size:3rem">${fmtTime(timerRemaining())}</div>
+    <div class="tq">${esc(q.text)}</div>
+    <div class="tchoices">
+      ${(q.choices || []).map((c, i) => {
+        const sel = isChosen && chosen === i;
+        return `<button class="tchoice ${sel ? 'selected' : ''} ${!canSubmit ? 'disabled' : ''}"
+                  ${canSubmit ? `onclick="App.teamSelect('${teamId}',${i})"` : 'disabled'}>
+          <b>${'أبجدهو'[i] || i + 1}.</b> ${esc(c)} ${sel ? ' ✓' : ''}</button>`;
+      }).join('')}
+    </div>`;
+}
+
+/* =====================================================================
+   PRESENTATION
+   ===================================================================== */
+let _lastFxId = null;
+let _lastCountdown = -1;
+
+function renderPresent() {
+  const el = $('#view-present');
+  const L = state.live;
+  const q = currentQuestion();
+  const teams = sortedTeams();
+  const rem = timerRemaining();
+  const lead = teams[0];
+  const answerTeam = getTeam(L.selectedTeamId || L.teamId);
+
+  let fxHTML = '';
+  if (L.fx && L.fx.id !== _lastFxId) {
+    _lastFxId = L.fx.id;
+    fxHTML = `<div class="fx ${esc(L.fx.type)}"><div class="bubble">${esc(L.fx.text)}</div></div>`;
+    if (L.fx.type === 'correct') playSound('correct');
+    else if (L.fx.type === 'wrong') playSound('wrong');
+    else if (L.fx.type === 'card') playSound('card');
+  }
+
+  const top = `
+  <div class="pres-top">
+    <img src="${esc(schoolLogo())}" alt="">
+    <div><div class="t1">${esc(state.event.title)}</div>
+      <div class="t2">${esc(state.school.name)}</div></div>
+    <div class="spacer"></div>
+    <div class="pres-slogan">${esc(state.event.slogan)}</div>
+    <div class="spacer"></div>
+    <div style="text-align:center"><div class="t2">الجولة</div>
+      <div style="font-size:1.4rem;font-weight:900;color:#ffd977">${L.round}</div></div>
+  </div>`;
+
+  let main = '';
+  if (L.status === 'finished') main = renderResultsHTML();
+  else if (L.countdown > 0) {
+    main = `<div class="countdown-num">${L.countdown}</div>`;
+    if (_lastCountdown !== L.countdown) { _lastCountdown = L.countdown; playSound('tick'); }
+  } else if (!q) {
+    main = `<div class="pres-idle"><div class="big">بانتظار بدء المنافسة</div>
+      <p class="muted" style="margin-top:1rem;font-size:1.1rem">${esc(state.event.slogan)}</p></div>`;
+  } else {
+    const isOpen = q.format === 'open' || q.format === 'quick';
+    const isChoice = q.choices && q.choices.length && !isOpen;
+    const clickable = state.settings.allowPresenterClick && !L.answerLocked && !L.scored &&
+                      !L.timeUp && L.timer.running && L.teamId && timerRemaining() > 0;
+    const isTimeUp = L.timeUp || (!L.timer.running && rem <= 0 && !L.answerLocked && L.status === 'question');
+    main = `
+      <div class="row" style="gap:.7rem;margin-bottom:.3rem">
+        <span class="badge gold" style="font-size:.9rem;padding:.35rem .9rem">${q.points} نقطة</span>
+        <span class="badge purple" style="font-size:.9rem;padding:.35rem .9rem">${esc(q.category)}</span>
+        ${L.doubleTeam ? `<span class="badge" style="font-size:.9rem;padding:.35rem .9rem">✖️2 ${esc((getTeam(L.doubleTeam)||{}).name||'')}</span>` : ''}
+        ${L.answerLocked ? `<span class="badge ok" style="font-size:.9rem;padding:.35rem .9rem">🎯 ${esc((answerTeam||{}).name||'')}</span>` : ''}
+      </div>
+      <div class="pres-q">${esc(q.text)}</div>
+      ${q.image ? `<img src="${esc(q.image)}" style="max-height:32vh;border-radius:18px;border:1px solid var(--line2)">` : ''}
+      ${isChoice ? `<div class="pres-choices">
+        ${q.choices.map((c, i) => {
+          const isCorrect = i === q.correctIndex;
+          const cls = L.revealed && isCorrect ? 'correct' : (L.hiddenChoices.includes(i) ? 'hidden' : '');
+          const selected = L.answerLocked && L.selectedChoice === i;
+          return `<div class="pres-choice ${cls} ${selected ? 'selected' : ''}"
+                       style="animation-delay:${i * .07}s"
+                       ${clickable ? `data-clickable="1" onclick="App.presentSelect(${i})"` : ''}>
+            <span class="kk">${'أبجدهو'[i] || i + 1}</span><span>${esc(c)}</span>
+            ${selected ? '<span style="margin-right:auto;font-size:.75em;color:#ffd977">🎯</span>' : ''}
+          </div>`;
+        }).join('')}
+      </div>` : ''}
+      ${L.revealed && isOpen ? `<div class="pres-choice correct" style="max-width:800px">
+         <span class="kk">✓</span><span>${esc(q.correctText || '')}</span></div>` : ''}
+      ${L.revealed && q.explanation ? `<div style="max-width:1100px;text-align:center;font-size:1.05rem;color:#a9d8ff;line-height:1.7">💡 ${esc(q.explanation)}</div>` : ''}
+      ${isTimeUp && !L.revealed ? `<div class="timeup-msg">⏰ انتهى الوقت!</div>` : ''}
+      <div style="display:flex;align-items:center;gap:1.2rem;margin-top:.3rem">
+        <div class="pres-timer ${rem <= 10 && rem > 0 && L.timer.running ? 'low' : ''}" data-timer-num>${fmtTime(rem)}</div>
+      </div>
+      <div style="width:min(680px,90%);height:10px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden">
+        <i data-timer-bar style="display:block;height:100%;border-radius:99px;
+          background:linear-gradient(90deg,#28e0ff,#3b6bff);box-shadow:0 0 16px rgba(40,224,255,.6);
+          width:${clamp(rem / (L.timer.total || 1) * 100, 0, 100)}%"></i>
+      </div>`;
+  }
+
+  const bar = `
+  <div class="pres-scorebar">
+    ${teams.map(t => `<div class="pscore ${lead && t.id === lead.id && teams.length > 1 ? 'lead' : ''} ${L.teamId === t.id && L.status === 'question' ? 'answering' : ''}" style="--tc:${esc(t.color)}">
+      <img src="${esc(t.logo)}" alt=""><div><div class="n">${esc(t.name)}</div></div>
+      <div class="s">${t.score}</div></div>`).join('')}
+  </div>`;
+
+  el.innerHTML = `${top}<div class="pres-main">${main}</div>${bar}${fxHTML}
+    <button class="btn sm ghost fs-btn" onclick="App.toggleFullscreen()">⛶</button>`;
+}
+
+function renderResultsHTML() {
+  const teams = sortedTeams();
+  const first = teams[0], second = teams[1], third = teams[2];
+  return `
+  <div class="results-wrap">
+    <div class="results-title">🏆 نتائج صراع الأدمغة</div>
+    <div class="podium">
+      ${second ? `<div class="pod" style="--tc:${esc(second.color)}"><img src="${esc(second.logo)}">
+        <div class="pr">المركز الثاني</div><div class="pn">${esc(second.name)}</div>
+        <div class="ps">${second.score}</div></div>` : ''}
+      ${first ? `<div class="pod first" style="--tc:${esc(first.color)}"><img src="${esc(first.logo)}">
+        <div class="pr">المركز الأول</div><div class="pn">${esc(first.name)}</div>
+        <div class="ps">${first.score}</div></div>` : ''}
+      ${third ? `<div class="pod" style="--tc:${esc(third.color)}"><img src="${esc(third.logo)}">
+        <div class="pr">المركز الثالث</div><div class="pn">${esc(third.name)}</div>
+        <div class="ps">${third.score}</div></div>` : ''}
+    </div>
+    <p class="muted" style="margin-top:1.3rem">${esc(state.event.slogan)}</p>
+  </div>`;
+}
+
+/* =====================================================================
+   =======================  ARENA  =====================================
+   ===================================================================== */
+
+const ARENA_SPIN_MS = () => Math.max(800, Math.min(8000, state.settings.cardRules.animateDuration || 3200));
+
+function renderArena() {
+  const A = state.arena;
+  const org = A.mode === 'organizer';
+  $('#arena-logo').src = schoolLogo();
+  $('#view-arena').classList.toggle('arena-mode-public', !org);
+  $('#arena-tab-org').classList.toggle('on', org);
+  $('#arena-tab-pub').classList.toggle('on', !org);
+
+  /* Watchdog: if the state says we're spinning but the timer says we've
+     exceeded the animation window + slack, resolve automatically. */
+  if ((A.stage === 'spinning-team' || A.stage === 'spinning-card')
+      && Date.now() - A.spinStart > ARENA_SPIN_MS() + 600) {
+    A.stage = A.stage === 'spinning-team' ? 'team-result' : 'card-result';
+    save(false);
+  }
+
+  const main = $('#arena-main');
+
+  if (org) {
+    main.innerHTML = renderArenaOrganizer();
+  } else {
+    main.innerHTML = renderArenaPublic();
+  }
+}
+
+/* ---------- ORGANIZER MODE ---------- */
+function renderArenaOrganizer() {
+  const A = state.arena;
+  const teams = activeTeams();
+  const teamsHTML = arenaTeamsHTML(teams);
+  const cardsHTML = arenaCardsHTML(teams);
+
+  let stageContent = '';
+  if (A.stage === 'idle') {
+    stageContent = `
+      <div class="arena-result">
+        <div class="msg">🃏 ساحة البطاقات</div>
+        <div class="sub">اختر إجراءً من الأسفل — الدور على ${esc((getTeam(A.selectedTeamId) || {}).name || 'لم يُحدد بعد')}</div>
+      </div>
+      ${teamsHTML}`;
+  } else if (A.stage === 'spinning-team') {
+    stageContent = teamsHTML;
+  } else if (A.stage === 'team-result') {
+    const t = getTeam(A.selectedTeamId);
+    stageContent = `${teamsHTML}
+      <div class="arena-result">
+        <div class="msg">🎯 تم اختيار فريق: ${esc(t ? t.name : '—')}</div>
+        <div class="sub">${t ? 'الآن يمكنك سحب بطاقة لهذا الفريق' : ''}</div>
+      </div>`;
+  } else if (A.stage === 'spinning-card') {
+    stageContent = `${cardsHTML}`;
+  } else if (A.stage === 'card-result') {
+    const t = getTeam(A.selectedTeamId);
+    const c = getCard(A.selectedCardId);
+    stageContent = `${cardsHTML}
+      <div class="arena-result">
+        <div class="msg">🎉 ${esc(t ? t.name : '—')} حصل على بطاقة</div>
+        <div class="card-preview" style="background:linear-gradient(135deg,${esc(c ? c.color : '#3b6bff')},${esc(c ? c.color : '#3b6bff')}88)">
+          ${esc((c && c.emoji) || '🃏')} ${esc(c ? c.name : '—')}
+        </div>
+        <div class="sub">${esc(c ? c.desc : '')}</div>
+      </div>`;
+  } else if (A.stage === 'announcement') {
+    stageContent = `
+      <div class="arena-result">
+        <div class="msg">${esc(A.message || '')}</div>
+        <div class="sub">${esc(A.subMessage || '')}</div>
+      </div>`;
+  }
+
+  return `
+    <div class="arena-stage">${stageContent}</div>
+    <div class="arena-controls">
+      <span class="tiny muted">طريقة السحب: <b>${labelMethod(state.settings.cardRules.method)}</b></span>
+      <button class="btn primary sm" onclick="App.arena.startSpinTeam()" ${isSpinning() ? 'disabled' : ''}>🎯 اختيار فريق عشوائي</button>
+      <button class="btn purple sm" onclick="App.arena.startSpinCard()" ${isSpinning() ? 'disabled' : ''}>🎴 اسحب بطاقة عشوائية</button>
+      <button class="btn gold sm" onclick="App.arena.startCombo()" ${isSpinning() ? 'disabled' : ''}>⚡ سحب فوري (فريق + بطاقة)</button>
+      <button class="btn ghost sm" onclick="App.arena.cancelSpin()" ${isSpinning() ? '' : 'disabled'}>✕ إلغاء</button>
+      <button class="btn ghost sm" onclick="App.arena.resetStage()">↺ تصفير</button>
+      <div class="spacer"></div>
+      <button class="btn ghost sm" onclick="App.arena.manualGrant()">＋ منح يدوي</button>
+      <button class="btn ghost sm" onclick="App.arena.openHistory()">📜 سجل البطاقات</button>
+    </div>
+    ${renderArenaInventory(teams)}`;
+}
+
+/* ---------- PUBLIC MODE ---------- */
+function renderArenaPublic() {
+  const A = state.arena;
+  const teams = activeTeams();
+  const teamsHTML = arenaTeamsHTML(teams);
+  const cardsHTML = arenaCardsHTML(teams);
+
+  let content = '';
+  if (A.stage === 'idle') {
+    content = `<div class="arena-result"><div class="msg">🏟️ ساحة البطاقات التكتيكية</div>
+      <div class="sub">${esc(state.event.slogan)}</div></div>`;
+  } else if (A.stage === 'spinning-team') {
+    content = teamsHTML;
+  } else if (A.stage === 'team-result') {
+    const t = getTeam(A.selectedTeamId);
+    content = `${teamsHTML}
+      <div class="arena-result">
+        <div class="msg">🎯 تم اختيار فريق: ${esc(t ? t.name : '—')}</div>
+        <div class="sub">استعدوا لسحب البطاقة</div>
+      </div>`;
+  } else if (A.stage === 'spinning-card') {
+    content = A.hideCardDuringSpin !== false
+      ? arenaCardsHTML(teams, true)
+      : cardsHTML;
+  } else if (A.stage === 'card-result' || A.stage === 'announcement') {
+    const t = getTeam(A.selectedTeamId);
+    const c = getCard(A.selectedCardId);
+    content = `${cardsHTML}
+      <div class="arena-result">
+        <div class="msg">${c ? `🎉 ${esc(t ? t.name : '')} حصل على: ${esc(c.name)}!` : esc(A.message || '')}</div>
+        ${c ? `<div class="card-preview" style="background:linear-gradient(135deg,${esc(c.color)},${esc(c.color)}88)">
+          ${esc(c.emoji || '🃏')} ${esc(c.desc)}</div>` : `<div class="sub">${esc(A.subMessage || '')}</div>`}
+      </div>`;
+  }
+
+  return `<div class="arena-stage">${content}</div>`;
+}
+
+/* ---------- sub-renderers ---------- */
+function arenaTeamsHTML(teams) {
+  const A = state.arena;
+  const spinning = A.stage === 'spinning-team';
+  const showingWinner = A.stage === 'team-result' || A.stage === 'card-result' || A.stage === 'announcement';
+  return `
+    <div class="arena-teams">
+      ${teams.map(t => {
+        const isWinner = showingWinner && A.selectedTeamId === t.id;
+        const isSpinning = spinning && !isWinner;
+        const dim = showingWinner && A.selectedTeamId !== t.id;
+        return `<div class="arena-team ${isSpinning ? 'spinning' : ''} ${isWinner ? 'winner' : ''} ${dim ? 'dim' : ''}"
+                     style="--tc:${esc(t.color)}">
+          <img src="${esc(t.logo)}" alt="">
+          <div class="n">${esc(t.name)}</div>
+          <div class="sc">${t.score} نقطة</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function arenaCardsHTML(teams, faceDown = false) {
+  const A = state.arena;
+  const spinning = A.stage === 'spinning-card';
+  const showingWinner = A.stage === 'card-result';
+  const dim = showingWinner && A.selectedCardId !== null;
+
+  /* show all cards regardless of supply for animation; supply check happens on draw */
+  const eligibleCards = state.cards.filter(c => (state.cardSupply[c.id] || 0) > 0);
+  const cardsToShow = eligibleCards.length ? eligibleCards : state.cards;
+
+  return `
+    <div class="arena-cards">
+      ${cardsToShow.map(c => {
+        const isWinner = showingWinner && A.selectedCardId === c.id;
+        const isSpinning = spinning && !isWinner && !faceDown;
+        const isDim = dim && A.selectedCardId !== c.id;
+        const hideFace = faceDown && !isWinner;
+        return `<div class="arena-card ${isSpinning ? 'spinning' : ''} ${isWinner ? 'winner' : ''} ${isDim ? 'dim' : ''} ${hideFace ? 'face-down' : ''}"
+                     style="background:linear-gradient(160deg,${esc(c.color)}dd,${esc(c.color)}44)">
+          <div class="sheen"></div>
+          <div class="emoji">${esc(c.emoji || '🃏')}</div>
+          <div class="acn">${esc(c.name)}</div>
+          <div class="acd">${esc(c.desc)}</div>
+          <div class="acf">${esc(EFFECT_LABEL[c.effect] || c.effect)}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function renderArenaInventory(teams) {
+  return `
+    <div class="arena-inv">
+      ${teams.map(t => {
+        const avail = Object.entries(t.cards || {}).filter(([, n]) => n > 0);
+        const used = Object.entries(t.cardsUsed || {}).filter(([, n]) => n > 0);
+        return `
+        <div class="arena-inv-card" style="--tc:${esc(t.color)}">
+          <div class="head">
+            <img src="${esc(t.logo)}" alt="">
+            <div class="nm">${esc(t.name)}</div>
+            <div class="cnt">${avail.reduce((a, [, n]) => a + n, 0)} 🃏</div>
+          </div>
+          <div class="mini-cards">
+            ${avail.length ? avail.map(([cardId, n]) => {
+              const c = getCard(cardId); if (!c) return '';
+              return `<span class="mini-card" style="background:linear-gradient(135deg,${esc(c.color)},${esc(c.color)}88)"
+                        onclick="App.arena.activateFor('${t.id}','${cardId}')"
+                        title="${esc(c.desc)}">
+                ${esc(c.emoji || '🃏')} ${esc(c.name)}<span class="num">×${n}</span>
+              </span>`;
+            }).join('') : '<span class="tiny muted">لا توجد بطاقات متاحة</span>'}
+          </div>
+          ${used.length ? `<div class="tiny muted" style="margin-top:.5rem">مستخدمة: ${used.map(([id, n]) => {
+            const c = getCard(id); return c ? esc(c.name) + ' ×' + n : '';
+          }).join(' · ')}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function isSpinning() {
+  return state.arena.stage === 'spinning-team' || state.arena.stage === 'spinning-card';
+}
+function labelMethod(m) {
+  return {
+    'random-team-random-card': 'فريق عشوائي ← بطاقة عشوائية',
+    'specific-team-random-card': 'فريق محدد ← بطاقة عشوائية',
+    'random-card-random-team': 'بطاقة عشوائية ← فريق عشوائي'
+  }[m] || m;
+}
+
+/* =====================================================================
+   ARENA ACTIONS
+   ===================================================================== */
+const Arena = {
+  setMode(mode) {
+    state.arena.mode = mode;
+    save(); renderArena();
+    toast(mode === 'public' ? 'وضع العرض العام' : 'وضع المنظّم', 'ok');
+  },
+
+  resetStage() {
+    const A = state.arena;
+    A.stage = 'idle';
+    A.selectedTeamId = null;
+    A.selectedCardId = null;
+    A.message = '';
+    A.subMessage = '';
+    save(); renderArena();
+  },
+
+  cancelSpin() {
+    if (!isSpinning()) return;
+    const A = state.arena;
+    const prevTeam = A.selectedTeamId;
+    const prevCard = A.selectedCardId;
+    A.stage = 'idle';
+    A.selectedTeamId = null;
+    A.selectedCardId = null;
+    save(); renderArena();
+    toast('تم إلغاء السحب', 'ok');
+  },
+
+  _pickEligibleTeams() {
+    return activeTeams();
+  },
+  _pickEligibleCards() {
+    const teams = activeTeams();
+    return state.cards.filter(c => {
+      if ((state.cardSupply[c.id] || 0) <= 0) return false;
+      /* ensure at least one team could hold it (not maxed) */
+      return true;
+    });
+  },
+
+  /* ---- Random team selection (animated) ---- */
+  startSpinTeam() {
+    if (isSpinning()) { toast('انتظر انتهاء الحركة الحالية', 'bad'); return; }
+    const teams = this._pickEligibleTeams();
+    if (!teams.length) { toast('لا توجد فرق مشاركة', 'bad'); return; }
+    const A = state.arena;
+    const winner = teams[Math.floor(Math.random() * teams.length)];
+    A.stage = 'spinning-team';
+    A.selectedTeamId = winner.id;
+    A.selectedCardId = null;
+    A.spinStart = Date.now();
+    A.spinDuration = ARENA_SPIN_MS();
+    A.message = '';
+    save(); renderArena();
+    playSound('spin');
+    this._log('team-select', winner.id, null, 'اختيار فريق عشوائي');
+    setTimeout(() => {
+      if (state.arena.stage !== 'spinning-team') return;
+      state.arena.stage = 'team-result';
+      state.arena.message = `تم اختيار فريق: ${winner.name}`;
+      save(); renderArena();
+      playSound('win');
+    }, A.spinDuration);
+  },
+
+  /* ---- Random card draw for currently-selected team (or auto-pick per method) ---- */
+  startSpinCard() {
+    if (isSpinning()) { toast('انتظر انتهاء الحركة الحالية', 'bad'); return; }
+    const A = state.arena;
+    const rules = state.settings.cardRules;
+    const teams = this._pickEligibleTeams();
+    const cards = this._pickEligibleCards();
+
+    if (!cards.length) { toast('لا توجد بطاقات متاحة في المخزون', 'bad'); return; }
+    if (!teams.length) { toast('لا توجد فرق مشاركة', 'bad'); return; }
+
+    let teamId = A.selectedTeamId;
+    if (!teamId) {
+      if (rules.method === 'specific-team-random-card') {
+        toast('اختر فريقاً أولاً', 'bad'); return;
+      }
+      teamId = teams[Math.floor(Math.random() * teams.length)].id;
+    }
+    const team = getTeam(teamId);
+    if (!team) { toast('الفريق غير موجود', 'bad'); return; }
+
+    /* enforce maxHold */
+    const held = Object.values(team.cards || {}).reduce((a, b) => a + b, 0);
+    if (held >= (rules.maxHold || 99)) {
+      toast(`الفريق وصل للحد الأقصى (${rules.maxHold} بطاقة)`, 'bad'); return;
+    }
+
+    const card = cards[Math.floor(Math.random() * cards.length)];
+    A.stage = 'spinning-card';
+    A.selectedTeamId = team.id;
+    A.selectedCardId = card.id;
+    A.spinStart = Date.now();
+    A.spinDuration = ARENA_SPIN_MS();
+    A.message = '';
+    save(); renderArena();
+    playSound('spin');
+    setTimeout(() => {
+      if (state.arena.stage !== 'spinning-card') return;
+      this._commitDraw(team.id, card.id);
+      state.arena.stage = 'card-result';
+      state.arena.message = `${team.name} حصل على بطاقة: ${card.name}`;
+      save(); renderArena();
+      playSound('win');
+    }, A.spinDuration);
+  },
+
+  /* ---- Combo: random team then random card (single click) ---- */
+  startCombo() {
+    if (isSpinning()) { toast('انتظر انتهاء الحركة الحالية', 'bad'); return; }
+    const teams = this._pickEligibleTeams();
+    const cards = this._pickEligibleCards();
+    if (!teams.length) { toast('لا توجد فرق مشاركة', 'bad'); return; }
+    if (!cards.length) { toast('لا توجد بطاقات متاحة في المخزون', 'bad'); return; }
+
+    /* Phase 1: spin team */
+    const team = teams[Math.floor(Math.random() * teams.length)];
+    const A = state.arena;
+    A.stage = 'spinning-team';
+    A.selectedTeamId = team.id;
+    A.selectedCardId = null;
+    A.spinStart = Date.now();
+    A.spinDuration = ARENA_SPIN_MS();
+    A.message = '';
+    save(); renderArena();
+    playSound('spin');
+    this._log('team-select', team.id, null, 'اختيار فريق عشوائي (combo)');
+
+    setTimeout(() => {
+      if (state.arena.stage !== 'spinning-team') return;
+      state.arena.stage = 'team-result';
+      state.arena.message = `تم اختيار فريق: ${team.name}`;
+      save(); renderArena();
+      playSound('win');
+
+      /* Phase 2: spin card */
+      setTimeout(() => {
+        if (state.arena.stage !== 'team-result') return;
+        const currentCards = this._pickEligibleCards();
+        if (!currentCards.length) { toast('لا توجد بطاقات متاحة', 'bad'); return; }
+        const card = currentCards[Math.floor(Math.random() * currentCards.length)];
+        A.stage = 'spinning-card';
+        A.selectedCardId = card.id;
+        A.spinStart = Date.now();
+        A.spinDuration = ARENA_SPIN_MS();
+        save(); renderArena();
+        playSound('spin');
+        setTimeout(() => {
+          if (state.arena.stage !== 'spinning-card') return;
+          this._commitDraw(team.id, card.id);
+          state.arena.stage = 'card-result';
+          state.arena.message = `${team.name} حصل على بطاقة: ${card.name}`;
+          save(); renderArena();
+          playSound('win');
+        }, A.spinDuration);
+      }, 700);
+    }, A.spinDuration);
+  },
+
+  /* ---- Actual inventory mutation happens here — only once per draw ---- */
+  _commitDraw(teamId, cardId) {
+    const team = getTeam(teamId), card = getCard(cardId);
+    if (!team || !card) return;
+    team.cards = team.cards || {};
+    team.cards[cardId] = (team.cards[cardId] || 0) + 1;
+    state.cardSupply[cardId] = Math.max(0, (state.cardSupply[cardId] || 0) - 1);
+    this._log('draw', teamId, cardId, `سحب عشوائي — ${team.name} ← ${card.name}`);
+  },
+
+  /* ---- Manual grant (organizer only) ---- */
+  manualGrant() {
+    const teams = activeTeams();
+    if (!teams.length) { toast('لا توجد فرق', 'bad'); return; }
+    openModal('منح بطاقة يدوياً', `
+      <div class="field"><label>الفريق</label>
+        <select class="select" id="mg-team">
+          ${teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join('')}
+        </select></div>
+      <div class="field"><label>البطاقة</label>
+        <select class="select" id="mg-card">
+          ${state.cards.map(c => `<option value="${c.id}">${esc(c.emoji || '🃏')} ${esc(c.name)}</option>`).join('')}
+        </select></div>
+      <div class="field"><label>العدد</label>
+        <input class="input" type="number" id="mg-count" min="1" max="20" value="1"></div>
+    `, `<button class="btn primary" onclick="App.arena._doManualGrant()">＋ منح</button>
+        <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`);
+  },
+  _doManualGrant() {
+    const teamId = $('#mg-team').value;
+    const cardId = $('#mg-card').value;
+    const n = Math.max(1, +$('#mg-count').value || 1);
+    const team = getTeam(teamId), card = getCard(cardId);
+    if (!team || !card) return;
+    team.cards = team.cards || {};
+    team.cards[cardId] = (team.cards[cardId] || 0) + n;
+    this._log('grant', teamId, cardId, `منح يدوي × ${n}`);
+    save(); closeModal(); renderArena();
+    toast(`تم منح ${card.name} × ${n} إلى ${team.name}`, 'ok');
+  },
+
+  /* ---- Remove unused (organizer) ---- */
+  removeUnused(teamId, cardId) {
+    const team = getTeam(teamId), card = getCard(cardId);
+    if (!team || !card) return;
+    if ((team.cards[cardId] || 0) <= 0) { toast('لا توجد نسخ متاحة', 'bad'); return; }
+    confirmDialog('حذف بطاقة', `حذف نسخة واحدة من <b>${esc(card.name)}</b> من ${esc(team.name)}؟`, () => {
+      team.cards[cardId] = (team.cards[cardId] || 0) - 1;
+      if (team.cards[cardId] <= 0) delete team.cards[cardId];
+      state.cardSupply[cardId] = (state.cardSupply[cardId] || 0) + 1;
+      this._log('remove', teamId, cardId, 'حذف بطاقة يدوي');
+      save(); renderArena();
+      toast('تم الحذف', 'ok');
+    });
+  },
+
+  /* ---- Activate a card from the arena's team inventory ---- */
+  activateFor(teamId, cardId) {
+    const team = getTeam(teamId), card = getCard(cardId);
+    if (!team || !card) return;
+    const check = canActivateCard(team, card);
+    if (!check.ok) { toast(check.reason, 'bad'); return; }
+    confirmDialog('تنشيط بطاقة',
+      `تنشيط <b>${esc(card.name)}</b> للفريق <b>${esc(team.name)}</b>؟<br>
+       <span class="tiny muted">${esc(card.desc)}</span>`,
+      () => this._doActivate(teamId, cardId),
+      'تنشيط', false);
+  },
+  _doActivate(teamId, cardId) {
+    const team = getTeam(teamId), card = getCard(cardId);
+    if (!team || !card) return;
+    if ((team.cards[cardId] || 0) <= 0) { toast('لا توجد نسخ متاحة', 'bad'); return; }
+    const res = applyCardEffect(team, card);
+    team.cards[cardId] = (team.cards[cardId] || 0) - 1;
+    if (team.cards[cardId] <= 0) delete team.cards[cardId];
+    team.cardsUsed = team.cardsUsed || {};
+    team.cardsUsed[cardId] = (team.cardsUsed[cardId] || 0) + 1;
+
+    const L = state.live;
+    L.fx = { id: uid(), type: 'card', text: `🃏 ${card.name} — ${team.name}\n${res.msg}` };
+    this._log('activate', teamId, cardId, `تنشيط — ${card.name} (${res.msg})`);
+    state.scoreLog.push({ id: uid(), ts: Date.now(), teamId, delta: 0,
+      reason: `بطاقة: ${card.name} — ${res.msg}`, correct: 0, wrong: 0 });
+
+    /* Optional: show an announcement on the arena for public */
+    const A = state.arena;
+    if (A.mode === 'public' && (A.stage === 'card-result' || A.stage === 'announcement')) {
+      A.message = `${team.name} فعّل: ${card.name}`;
+      A.subMessage = res.msg;
+    }
+
+    save(); renderArena();
+    playSound('card');
+    toast(`تم تنشيط ${card.name}${res.manual ? ' (تُطبَّق يدوياً)' : ''}`, 'ok');
+  },
+
+  /* ---- Open full card history ---- */
+  openHistory() {
+    const rows = state.cardHistory.slice().reverse().slice(0, 200);
+    const icons = { draw: '🎴', grant: '＋', remove: '🗑', activate: '⚡', transfer: '⇄', 'team-select': '🎯' };
+    openModal('سجل البطاقات',
+      rows.length ? `<div class="arena-history" style="max-height:60vh">
+        ${rows.map(h => {
+          const t = getTeam(h.teamId), c = getCard(h.cardId);
+          return `<div class="hrow"><span class="t">${new Date(h.ts).toLocaleString('ar')}</span>
+            <span class="ic">${icons[h.type] || '·'}</span>
+            <span class="txt"><b>${esc(t ? t.name : '—')}</b>${c ? ' · ' + esc(c.name) : ''}
+              <span class="muted tiny"> — ${esc(h.note || '')}</span></span></div>`;
+        }).join('')}
+      </div>` : '<p class="muted">لا يوجد سجل بعد.</p>',
+      `<button class="btn ghost" onclick="App.closeModal()">إغلاق</button>`,
+      { width: '720px' });
+  },
+
+  /* ---- internal logging ---- */
+  _log(type, teamId, cardId, note) {
+    state.cardHistory.push({ id: uid(), ts: Date.now(), type, teamId, cardId, note });
+    if (state.cardHistory.length > 500) state.cardHistory.splice(0, state.cardHistory.length - 500);
+  }
+};
+
+/* =====================================================================
+   PUBLIC API
+   ===================================================================== */
+const App = {
+  go(hash) { location.hash = hash; },
+  goStart() { location.hash = isLogged() ? '#/dash/overview' : '#/login'; },
+  login() { doLogin(); },
+  logout() { setLogged(false); location.hash = '#/'; toast('تم تسجيل الخروج', 'ok'); },
+  closeModal,
+  openPresent() {
+    const url = location.href.split('#')[0] + '#/present';
+    const w = window.open(url, 'brainclash_present', 'width=1600,height=900');
+    if (!w) toast('المتصفح منع فتح النافذة — اسمح بالنوافذ المنبثقة', 'bad');
+    else toast('تم فتح شاشة العرض', 'ok');
+  },
+  toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    else document.exitFullscreen();
+  },
+  toggleSound() {
+    state.settings.sound = !state.settings.sound;
+    save(); render();
+    toast(state.settings.sound ? 'الصوت مفعّل 🔊' : 'الصوت مكتوم 🔇', 'ok');
+  },
+  presentSelect(i) {
+    if (!state.settings.allowPresenterClick) { toast('النقر غير مسموح', 'bad'); return; }
+    recordAnswer(i, 'presentation');
+  },
+  teamSelect(teamId, i) {
+    if (state.live.teamId !== teamId) { toast('ليس دور هذا الفريق', 'bad'); return; }
+    recordAnswer(i, 'teamDevice');
+  },
+
+  saveEvent() {
+    state.school.name = $('#ev-school').value.trim() || state.school.name;
+    state.event.title = $('#ev-title').value.trim();
+    state.event.slogan = $('#ev-slogan').value.trim();
+    state.event.audience = $('#ev-audience').value.trim();
+    state.event.supervisor = $('#ev-supervisor').value.trim();
+    save(); render(); toast('تم الحفظ', 'ok');
+  },
+  saveSettings() {
+    state.settings.autoScore = $('#st-autoscore').checked;
+    state.settings.allowLateAnswer = $('#st-late').checked;
+    state.settings.allowPresenterClick = $('#st-click').checked;
+    state.settings.timerDefault = clamp(+$('#st-timer').value || 30, 5, 600);
+    save(); toast('تم الحفظ', 'ok');
+  },
+  saveCardRules() {
+    const R = state.settings.cardRules;
+    R.method = $('#cr-method').value;
+    R.allowOtherTeamTurn = $('#cr-other').checked;
+    R.allowStacking = $('#cr-stack').checked;
+    R.carryOverRounds = $('#cr-carry').checked;
+    R.expireAtEnd = $('#cr-expire').checked;
+    R.confirmDraw = $('#cr-confirm').checked;
+    R.maxHold = clamp(+$('#cr-max').value || 99, 1, 999);
+    R.animateDuration = clamp(+$('#cr-dur').value || 3200, 800, 8000);
+    save(); toast('تم حفظ قواعد البطاقات', 'ok');
+  },
+  uploadSchoolLogo(input) {
+    const f = input.files && input.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { state.school.logo = r.result; save(); render(); toast('تم تحديث الشعار', 'ok'); };
+    r.readAsDataURL(f);
+  },
+  async changeCreds() {
+    const u = $('#ac-user').value.trim(), p1 = $('#ac-pass').value, p2 = $('#ac-pass2').value;
+    if (!u) { toast('اسم المستخدم مطلوب', 'bad'); return; }
+    if (p1 && p1 !== p2) { toast('كلمتا المرور غير متطابقتين', 'bad'); return; }
+    if (p1 && p1.length < 4) { toast('كلمة المرور قصيرة', 'bad'); return; }
+    state.auth.username = u;
+    if (p1) state.auth.passHash = await sha256(SALT + p1);
+    save(); toast('تم التحديث', 'ok'); render();
+  },
+  exportBackup() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `brainclash-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    toast('تم التصدير', 'ok');
+  },
+  importBackup(input) {
+    const f = input.files && input.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const parsed = JSON.parse(r.result);
+        if (!parsed || !Array.isArray(parsed.teams)) throw new Error('صيغة غير صحيحة');
+        confirmDialog('استيراد', 'سيتم استبدال جميع البيانات. متابعة؟', () => {
+          state = Object.assign(defaultState(), parsed);
+          ensureCardMaps(); ensureCardRules(); ensureCardSupply();
+          save(); render(); toast('تم الاستيراد', 'ok');
+        });
+      } catch (e) { toast('ملف غير صالح: ' + e.message, 'bad'); }
+    };
+    r.readAsText(f);
+  },
+  resetScores() {
+    confirmDialog('تصفير النقاط', 'تصفير نقاط جميع الفرق. متابعة؟', () => {
+      state.teams.forEach(t => { t.score = 0; t.correct = 0; t.wrong = 0; });
+      state.scoreLog = [];
+      state.live.doubleTeam = null; state.live.shieldTeams = [];
+      save(); render(); toast('تم التصفير', 'ok');
+    }, 'نعم');
+  },
+  clearScoreLog() {
+    confirmDialog('مسح السجل', 'حذف سجل النقاط (دون تغيير النقاط). متابعة؟', () => {
+      state.scoreLog = []; save(); render(); toast('تم المسح', 'ok');
+    });
+  },
+  factoryReset() {
+    confirmDialog('إعادة ضبط المصنع', 'سيتم حذف <b>كل</b> البيانات. متابعة؟', async () => {
+      const auth = state.auth;
+      state = defaultState();
+      state.auth = auth;
+      ensureCardMaps(); ensureCardRules(); ensureCardSupply();
+      save(); render(); toast('تمت إعادة الضبط', 'ok');
+    }, 'حذف كل شيء');
+  },
+
+  arena: Arena,
+
+  teams: {
+    edit(id) {
+      const t = id ? getTeam(id) : null;
+      const d = t || { name: '', color: '#3b6bff', emoji: '🦁', logo: '', members: [], active: true, score: 0 };
+      openModal(t ? 'تعديل الفريق' : 'فريق جديد', `
+        <div class="field"><label>اسم الفريق</label>
+          <input class="input" id="tm-name" value="${esc(d.name)}"></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>اللون</label><input type="color" id="tm-color" value="${esc(d.color)}" style="width:100%"></div>
+          <div class="field" style="flex:1"><label>الإيموجي</label><input class="input" id="tm-emoji" value="${esc(d.emoji || '🦁')}" maxlength="4"></div>
+        </div>
+        <div class="field"><label>شعار (اختياري)</label>
+          <input type="file" accept="image/*" onchange="App.teams._logoPreview(this)">
+          <div class="row" style="margin-top:.5rem">
+            <img id="tm-preview" src="${esc(d.logo || makeLogo(d.emoji || '🦁', d.color))}" style="width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid var(--line2)">
+            <button class="btn xs ghost" onclick="App.teams._clearLogo()">مسح</button>
+          </div>
+        </div>
+        <div class="field"><label>الأعضاء (سطر لكل عضو)</label>
+          <textarea class="textarea" id="tm-members">${esc((d.members || []).join('\n'))}</textarea></div>
+        <div class="field"><label>النقاط</label><input class="input" type="number" id="tm-score" value="${d.score || 0}"></div>
+        <label class="check"><input type="checkbox" id="tm-active" ${d.active !== false ? 'checked' : ''}><span>مشارك</span></label>
+      `, `<button class="btn primary" onclick="App.teams._save('${id || ''}')">💾 حفظ</button>
+          <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`);
+      App.teams._draftLogo = d.logo || '';
+    },
+    _logoPreview(input) {
+      const f = input.files && input.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => { App.teams._draftLogo = r.result; $('#tm-preview').src = r.result; };
+      r.readAsDataURL(f);
+    },
+    _clearLogo() {
+      App.teams._draftLogo = '';
+      const emoji = $('#tm-emoji').value || '🦁';
+      const color = $('#tm-color').value || '#3b6bff';
+      $('#tm-preview').src = makeLogo(emoji, color);
+    },
+    _save(id) {
+      const name = $('#tm-name').value.trim();
+      if (!name) { toast('اسم الفريق مطلوب', 'bad'); return; }
+      const color = $('#tm-color').value;
+      const emoji = $('#tm-emoji').value.trim() || '🦁';
+      const members = $('#tm-members').value.split('\n').map(s => s.trim()).filter(Boolean);
+      const score = +$('#tm-score').value || 0;
+      const active = $('#tm-active').checked;
+      const logo = App.teams._draftLogo || makeLogo(emoji, color);
+      if (id) {
+        Object.assign(getTeam(id), { name, color, emoji, logo, members, score, active });
+      } else {
+        state.teams.push({ id: uid(), name, color, emoji, logo, members, score,
+          correct: 0, wrong: 0, cards: {}, cardsUsed: {}, active });
+      }
+      ensureCardSupply();
+      save(); closeModal(); render(); toast('تم الحفظ', 'ok');
+    },
+    del(id) {
+      const t = getTeam(id); if (!t) return;
+      confirmDialog('حذف فريق', `حذف <b>${esc(t.name)}</b> نهائياً؟`, () => {
+        state.teams = state.teams.filter(x => x.id !== id);
+        if (state.live.teamId === id) state.live.teamId = null;
+        save(); render(); toast('تم الحذف', 'ok');
+      });
+    },
+    score(id) {
+      const t = getTeam(id); if (!t) return;
+      openModal('تعديل نقاط ' + t.name, `
+        <div class="hint" style="margin-bottom:.9rem">الحالي: <b style="color:#ffd977">${t.score}</b></div>
+        <div class="field"><label>القيمة</label><input class="input" type="number" id="ms-val" value="10"></div>
+        <div class="field"><label>السبب</label><input class="input" id="ms-reason" placeholder="تعديل يدوي"></div>
+        <div class="row">
+          <button class="btn ok" onclick="App.teams._applyScore('${id}', 1)">＋</button>
+          <button class="btn bad" onclick="App.teams._applyScore('${id}', -1)">－</button>
+        </div>`, `<button class="btn ghost" onclick="App.closeModal()">إغلاق</button>`);
+    },
+    _applyScore(id, sign) {
+      const v = Math.abs(+$('#ms-val').value || 0);
+      const reason = $('#ms-reason').value.trim() || 'تعديل يدوي';
+      applyScore(id, sign * v, reason);
+      save(); closeModal(); render();
+      toast(`تم ${sign > 0 ? 'منح' : 'خصم'} ${v}`, 'ok');
+    },
+    cards(id) {
+      const t = getTeam(id); if (!t) return;
+      openModal('بطاقات ' + t.name, `
+        <div class="hint" style="margin-bottom:.9rem">اضبط عدد النسخ المتاحة لهذا الفريق لكل بطاقة.</div>
+        ${state.cards.map(c => `
+          <div class="row" style="padding:.5rem 0;border-bottom:1px solid var(--line)">
+            <div style="flex:1"><b>${esc(c.emoji || '🃏')} ${esc(c.name)}</b>
+              <div class="tiny muted">مستخدمة: ${cardUsesUsed(t, c.id)}</div></div>
+            <input class="input" type="number" min="0" max="99" style="width:80px"
+                   data-card="${c.id}" value="${cardUsesLeft(t, c.id)}">
+          </div>`).join('')}
+      `, `<button class="btn primary" onclick="App.teams._saveCards('${id}')">💾 حفظ</button>
+          <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`);
+    },
+    _saveCards(id) {
+      const t = getTeam(id); if (!t) return;
+      t.cards = {};
+      $$('[data-card]').forEach(inp => {
+        const v = Math.max(0, +inp.value || 0);
+        if (v > 0) t.cards[inp.dataset.card] = v;
+      });
+      save(); closeModal(); render(); toast('تم الحفظ', 'ok');
+    }
+  },
+
+  q: {
+    filter() {
+      const term = ($('#q-search').value || '').trim().toLowerCase();
+      const cat = $('#q-fcat').value, diff = $('#q-fdiff').value;
+      const rows = state.questions.map((q, i) => ({ q, i })).filter(({ q }) => {
+        if (term && !(q.text || '').toLowerCase().includes(term)) return false;
+        if (cat && q.category !== cat) return false;
+        if (diff && q.difficulty !== diff) return false;
+        return true;
+      });
+      const box = $('#q-list');
+      if (!rows.length) { box.innerHTML = `<div class="card pad" style="text-align:center;padding:2rem"><p class="muted">لا نتائج.</p></div>`; return; }
+      box.innerHTML = rows.map(({ q, i }) => `
+        <div class="qrow"><div class="idx">${i + 1}</div>
+          <div class="txt"><div class="t">${esc(q.text)}</div>
+            <div class="m"><span class="badge">${esc(FORMAT_LABEL[q.format])}</span>
+              <span class="badge gold">${q.points} نقطة</span></div></div>
+          <div class="acts">
+            <button class="btn xs ghost" onclick="App.q.preview('${q.id}')">👁</button>
+            <button class="btn xs ghost" onclick="App.q.edit('${q.id}')">✏️</button>
+            <button class="btn xs bad" onclick="App.q.del('${q.id}')">🗑</button>
+          </div></div>`).join('');
+    },
+    edit(id) {
+      const q = id ? getQuestion(id) : null;
+      const d = q || { text: '', category: 'عام', difficulty: 'medium',
+        points: state.settings.pointsByDifficulty.medium, timeLimit: state.settings.timerDefault,
+        format: 'mcq', choices: ['', '', '', ''], correctIndex: 0, correctText: '',
+        explanation: '', penalty: 0, bonus: 0, image: '', audio: '' };
+      App.q._draft = JSON.parse(JSON.stringify(d));
+      App.q._id = id;
+      renderQEditor();
+    },
+    addChoice() {
+      const d = App.q._draft;
+      if (d.choices.length >= 6) { toast('الحد 6', 'bad'); return; }
+      d.choices.push(''); renderQEditor();
+    },
+    removeChoice(i) {
+      const d = App.q._draft;
+      if (d.choices.length <= 2) { toast('الحد 2', 'bad'); return; }
+      d.choices.splice(i, 1);
+      if (d.correctIndex >= d.choices.length) d.correctIndex = 0;
+      renderQEditor();
+    },
+    setCorrect(i) { App.q._draft.correctIndex = i; renderQEditor(); },
+    setFormat(f) {
+      App.q._draft.format = f;
+      if (f === 'tf') { App.q._draft.choices = ['صح', 'خطأ']; App.q._draft.correctIndex = 0; }
+      renderQEditor();
+    },
+    save() {
+      const d = App.q._draft;
+      d.text = $('#qe-text').value.trim();
+      d.category = $('#qe-cat').value.trim() || 'عام';
+      d.difficulty = $('#qe-diff').value;
+      d.points = Math.max(1, +$('#qe-points').value || 10);
+      d.timeLimit = clamp(+$('#qe-time').value || 30, 5, 600);
+      if ($('#qe-correcttext')) d.correctText = $('#qe-correcttext').value.trim();
+      d.explanation = $('#qe-exp').value.trim();
+      $$('[data-choice]').forEach(inp => { d.choices[+inp.dataset.choice] = inp.value; });
+      if (!d.text) { toast('نص السؤال مطلوب', 'bad'); return; }
+      d.choices = d.choices.map(c => c.trim());
+      if (App.q._id) Object.assign(getQuestion(App.q._id), d);
+      else state.questions.push(Object.assign({ id: uid() }, d));
+      save(); closeModal(); render(); toast('تم حفظ السؤال', 'ok');
+    },
+    dup(id) {
+      const q = getQuestion(id); if (!q) return;
+      const copy = JSON.parse(JSON.stringify(q)); copy.id = uid();
+      const i = state.questions.findIndex(x => x.id === id);
+      state.questions.splice(i + 1, 0, copy);
+      save(); render(); toast('تم التكرار', 'ok');
+    },
+    del(id) {
+      const q = getQuestion(id); if (!q) return;
+      confirmDialog('حذف سؤال', `حذف «${esc(q.text.slice(0, 60))}»؟`, () => {
+        state.questions = state.questions.filter(x => x.id !== id);
+        if (state.live.questionId === id) { state.live.questionId = null; state.live.status = 'idle'; }
+        save(); render(); toast('تم الحذف', 'ok');
+      });
+    },
+    move(id, dir) {
+      const i = state.questions.findIndex(q => q.id === id), j = i + dir;
+      if (i < 0 || j < 0 || j >= state.questions.length) return;
+      const [m] = state.questions.splice(i, 1);
+      state.questions.splice(j, 0, m);
+      save(); render();
+    },
+    preview(id) {
+      const q = getQuestion(id); if (!q) return;
+      openModal('معاينة', `<div class="qtext">${esc(q.text)}</div>
+        <div class="choices">${(q.choices || []).map((c, i) =>
+          `<div class="choice ${i === q.correctIndex ? 'correct' : ''}"><span class="k">${i + 1}</span><span>${esc(c)}</span></div>`).join('')}</div>`,
+        `<button class="btn ghost" onclick="App.closeModal()">إغلاق</button>`);
+    },
+    exportJSON() {
+      const blob = new Blob([JSON.stringify(state.questions, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'brainclash-questions.json'; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+      toast('تم التصدير', 'ok');
+    },
+    importJSON() {
+      openModal('استيراد أسئلة', `<input type="file" accept="application/json,.json" id="q-import-file" class="input">`,
+        `<button class="btn primary" onclick="App.q._doImport()">⬆️ استيراد</button>
+         <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`);
+    },
+    _doImport() {
+      const f = $('#q-import-file').files[0];
+      if (!f) { toast('اختر ملفاً', 'bad'); return; }
+      const r = new FileReader();
+      r.onload = () => {
+        try {
+          const arr = JSON.parse(r.result);
+          if (!Array.isArray(arr)) throw new Error('صيغة غير صحيحة');
+          let n = 0;
+          arr.forEach(q => { if (q && q.text) { state.questions.push(Object.assign({id: uid()}, q)); n++; } });
+          save(); closeModal(); render(); toast(`تم استيراد ${n}`, 'ok');
+        } catch (e) { toast('خطأ: ' + e.message, 'bad'); }
+      };
+      r.readAsText(f);
+    }
+  },
+
+  cards: {
+    edit(id) {
+      const c = id ? getCard(id) : null;
+      const d = c || { name: '', desc: '', color: '#3b6bff', effect: 'double', uses: 1, emoji: '🃏', value: 0, confirm: true };
+      openModal(id ? 'تعديل البطاقة' : 'بطاقة جديدة', `
+        <div class="field"><label>الاسم</label><input class="input" id="ce-name" value="${esc(d.name)}"></div>
+        <div class="field"><label>الوصف</label><textarea class="textarea" id="ce-desc">${esc(d.desc)}</textarea></div>
+        <div class="row">
+          <div class="field" style="flex:1"><label>اللون</label><input type="color" id="ce-color" value="${esc(d.color)}" style="width:100%"></div>
+          <div class="field" style="flex:1"><label>الإيموجي</label><input class="input" id="ce-emoji" value="${esc(d.emoji || '🃏')}" maxlength="4"></div>
+          <div class="field" style="flex:1"><label>استخدامات/فريق</label><input class="input" type="number" id="ce-uses" min="1" max="99" value="${d.uses || 1}"></div>
+        </div>
+        <div class="field"><label>نوع التأثير</label>
+          <select class="select" id="ce-effect">
+            ${Object.entries(EFFECT_LABEL).map(([k, v]) =>
+              `<option value="${k}" ${d.effect === k ? 'selected' : ''}>${v}</option>`).join('')}
+          </select></div>
+        <div class="field"><label>قيمة التأثير (ثوانٍ/نقاط)</label>
+          <input class="input" type="number" id="ce-value" min="0" value="${d.value || 0}"></div>
+      `, `<button class="btn primary" onclick="App.cards._save('${id || ''}')">💾 حفظ</button>
+          <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`, { width: '620px' });
+    },
+    _save(id) {
+      const name = $('#ce-name').value.trim();
+      if (!name) { toast('الاسم مطلوب', 'bad'); return; }
+      const data = {
+        name, desc: $('#ce-desc').value.trim(), color: $('#ce-color').value,
+        emoji: $('#ce-emoji').value.trim() || '🃏',
+        uses: clamp(+$('#ce-uses').value || 1, 1, 99),
+        effect: $('#ce-effect').value,
+        value: Math.max(0, +$('#ce-value').value || 0)
+      };
+      if (id) Object.assign(getCard(id), data);
+      else state.cards.push(Object.assign({ id: uid(), confirm: true }, data));
+      ensureCardSupply();
+      save(); closeModal(); render(); toast('تم الحفظ', 'ok');
+    },
+    replenish(id) {
+      const c = getCard(id); if (!c) return;
+      state.cardSupply[id] = (state.cardSupply[id] || 0) + (c.uses || 1) * activeTeams().length;
+      save(); render(); toast('تمت إعادة التزويد', 'ok');
+    },
+    del(id) {
+      const c = getCard(id); if (!c) return;
+      confirmDialog('حذف بطاقة', `حذف <b>${esc(c.name)}</b> من كل الفرق؟`, () => {
+        state.cards = state.cards.filter(x => x.id !== id);
+        state.teams.forEach(t => { if (t.cards) delete t.cards[id]; if (t.cardsUsed) delete t.cardsUsed[id]; });
+        delete state.cardSupply[id];
+        save(); render(); toast('تم الحذف', 'ok');
+      });
+    }
+  },
+
+  live: {
+    pickTeam(id) {
+      const L = state.live;
+      if (L.answerLocked) { toast('لا يمكن التغيير بعد الإجابة', 'bad'); return; }
+      L.teamId = L.teamId === id ? null : id;
+      save(); render();
+    },
+    startQuestion() {
+      const q = currentQuestion() || state.questions[0];
+      if (!q) { toast('أضف أسئلة أولاً', 'bad'); return; }
+      if (state.live.questionId !== q.id) state.live.questionId = q.id;
+      this._beginQuestion(q);
+    },
+    _beginQuestion(q) {
+      const L = state.live;
+      L.status = 'question';
+      L.revealed = false; L.hiddenChoices = [];
+      L.selectedChoice = null; L.selectedTeamId = null;
+      L.answerLocked = false; L.answerTs = null;
+      L.timeUp = false; L.scored = false; L.firstResponder = null;
+      L.timer.total = q.timeLimit;
+      resetTimer(q.timeLimit);
+      startTimer();
+      playSound('start');
+      save(); render();
+      toast('بدأ السؤال — المؤقت يعمل', 'ok');
+    },
+    countdown() {
+      let n = 3;
+      state.live.countdown = n;
+      save(); render();
+      playSound('tick');
+      const iv = setInterval(() => {
+        n--; state.live.countdown = n;
+        if (n > 0) playSound('tick');
+        save(); render();
+        if (n <= 0) {
+          clearInterval(iv);
+          setTimeout(() => {
+            state.live.countdown = 0;
+            const q = currentQuestion();
+            if (q) this._beginQuestion(q);
+            else { state.live.status = 'question'; save(); render(); }
+          }, 700);
+        }
+      }, 1000);
+    },
+    next() {
+      const i = state.questions.findIndex(q => q.id === state.live.questionId);
+      if (i < 0 || !state.questions[i + 1]) { toast('آخر سؤال', 'bad'); return; }
+      this._beginQuestion(state.questions[i + 1]);
+    },
+    prev() {
+      const i = state.questions.findIndex(q => q.id === state.live.questionId);
+      if (i <= 0) { toast('أول سؤال', 'bad'); return; }
+      this._beginQuestion(state.questions[i - 1]);
+    },
+    random() {
+      if (!state.questions.length) { toast('لا أسئلة', 'bad'); return; }
+      const pool = state.questions.filter(q => q.id !== state.live.questionId);
+      const pick = (pool.length ? pool : state.questions)[Math.floor(Math.random() * (pool.length || state.questions.length))];
+      this._beginQuestion(pick);
+    },
+    skip() {
+      state.live.revealed = true;
+      state.live.fx = { id: uid(), type: 'wrong', text: '⏭ تم التخطي' };
+      playSound('wrong'); save(); render();
+    },
+    reveal() { state.live.revealed = !state.live.revealed; save(); render(); },
+    organizerSelect(i) {
+      if (state.live.answerLocked) { toast('تم تسجيل الإجابة', 'bad'); return; }
+      if (!state.live.teamId) { toast('اختر فريقاً', 'bad'); return; }
+      recordAnswer(i, 'organizer');
+    },
+    clearSelection() {
+      if (state.live.scored) { toast('لا يمكن المسح بعد الاحتساب', 'bad'); return; }
+      state.live.selectedChoice = null;
+      state.live.selectedTeamId = null;
+      state.live.answerLocked = false;
+      state.live.answerTs = null;
+      save(); render();
+    },
+    toggleTimer() {
+      const t = state.live.timer;
+      if (t.running) { pauseTimer(); toast('تم الإيقاف'); }
+      else { if (t.remaining <= 0) resetTimer(currentQuestion() ? currentQuestion().timeLimit : state.settings.timerDefault); startTimer(); }
+      save(); render();
+    },
+    resetTimer() {
+      const q = currentQuestion();
+      resetTimer(q ? q.timeLimit : state.settings.timerDefault);
+      save(); render();
+    },
+    addTime(sec) { addTime(sec); save(); render(); toast(`+${sec}ث`, 'ok'); },
+    correct() {
+      const L = state.live, q = currentQuestion();
+      if (!q || L.scored) { toast('لا يمكن التكرار', 'bad'); return; }
+      const t = getTeam(L.selectedTeamId || L.teamId);
+      if (!t) { toast('اختر الفريق', 'bad'); return; }
+      let pts = (q.points || 10) + (q.bonus || 0);
+      let doubled = false;
+      if (L.doubleTeam === t.id) { pts *= 2; doubled = true; L.doubleTeam = null; }
+      applyScore(t.id, pts, 'إجابة صحيحة: ' + (q.text || '').slice(0, 45), { correct: 1 });
+      L.revealed = true; L.scored = true; L.answerLocked = true;
+      L.timer.running = false;
+      L.fx = { id: uid(), type: 'correct', text: `+${pts} — ${t.name}${doubled ? ' ✖️2' : ''}` };
+      playSound('correct'); save(); render();
+    },
+    wrong() {
+      const L = state.live, q = currentQuestion();
+      if (!q || L.scored) { toast('لا يمكن التكرار', 'bad'); return; }
+      const t = getTeam(L.selectedTeamId || L.teamId);
+      if (!t) { toast('اختر الفريق', 'bad'); return; }
+      const pen = q.penalty || 0;
+      if (L.shieldTeams.includes(t.id)) {
+        L.shieldTeams = L.shieldTeams.filter(id => id !== t.id);
+        L.fx = { id: uid(), type: 'card', text: `🛡️ درع النقاط حمى ${t.name}` };
+        L.scored = true; L.revealed = true;
+        save(); playSound('card'); render(); return;
+      }
+      if (pen > 0) applyScore(t.id, -pen, 'إجابة خاطئة', { wrong: 1 });
+      else { t.wrong += 1; state.scoreLog.push({ id: uid(), ts: Date.now(), teamId: t.id, delta: 0,
+        reason: 'إجابة خاطئة', correct: 0, wrong: 1 }); }
+      L.revealed = true; L.scored = true; L.answerLocked = true;
+      L.timer.running = false;
+      L.fx = { id: uid(), type: 'wrong', text: pen > 0 ? `-${pen}` : '✗' };
+      playSound('wrong'); save(); render();
+    },
+    undo() { undoScore(); },
+    nextRound() {
+      const L = state.live;
+      L.round += 1;
+      L.revealed = false; L.hiddenChoices = [];
+      L.selectedChoice = null; L.selectedTeamId = null;
+      L.answerLocked = false; L.timeUp = false; L.scored = false;
+      resetTimer(0);
+      save(); render();
+      toast(`بدأت الجولة ${L.round}`, 'ok');
+    },
+    finish() {
+      if (!activeTeams().length) { toast('لا فرق', 'bad'); return; }
+      confirmDialog('إنهاء المسابقة', 'تسجيل النتائج النهائية؟', () => {
+        const standings = sortedTeams().map(t => ({
+          name: t.name, score: t.score, correct: t.correct, wrong: t.wrong, logo: t.logo, color: t.color
+        }));
+        state.live.status = 'finished';
+        state.live.timer.running = false;
+        state.history.push({ id: uid(), ts: Date.now(),
+          title: state.event.title + ' — ' + new Date().toLocaleDateString('ar'), standings });
+        playSound('win'); save(); render();
+        toast('انتهت المسابقة 🏆', 'gold');
+      }, 'إنهاء', false);
+    }
+  }
+};
+
+/* =====================================================================
+   QUESTION EDITOR (dynamic)
+   ===================================================================== */
+function renderChoicesHTML() {
+  const d = App.q._draft;
+  if (d.format === 'open' || d.format === 'quick') return '';
+  return `
+    <div class="field"><label>الخيارات (اختر الصحيح)</label>
+      ${d.choices.map((c, i) => `
+        <div class="row" style="margin-bottom:.45rem">
+          <input type="radio" name="qcorrect" ${d.correctIndex === i ? 'checked' : ''}
+                 onchange="App.q.setCorrect(${i})" style="width:20px;height:20px;accent-color:#22e08a;cursor:pointer">
+          <input class="input" data-choice="${i}" value="${esc(c)}" style="flex:1">
+          <button class="btn xs bad" onclick="App.q.removeChoice(${i})">✕</button>
+        </div>`).join('')}
+      <button class="btn ghost sm" onclick="App.q.addChoice()">＋ إضافة خيار</button>
+    </div>`;
+}
+function renderQEditor() {
+  const d = App.q._draft;
+  const needCT = d.format === 'open' || d.format === 'quick';
+  openModal(App.q._id ? 'تعديل السؤال' : 'سؤال جديد', `
+    <div class="field"><label>نص السؤال</label>
+      <textarea class="textarea" id="qe-text">${esc(d.text)}</textarea></div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>النوع</label>
+        <select class="select" id="qe-format" onchange="App.q.setFormat(this.value)">
+          ${Object.entries(FORMAT_LABEL).map(([k, v]) =>
+            `<option value="${k}" ${d.format === k ? 'selected' : ''}>${v}</option>`).join('')}
+        </select></div>
+      <div class="field" style="flex:1"><label>المستوى</label>
+        <select class="select" id="qe-diff">
+          <option value="easy" ${d.difficulty === 'easy' ? 'selected' : ''}>سهل</option>
+          <option value="medium" ${d.difficulty === 'medium' ? 'selected' : ''}>متوسط</option>
+          <option value="hard" ${d.difficulty === 'hard' ? 'selected' : ''}>صعب</option>
+        </select></div>
+      <div class="field" style="flex:1"><label>التصنيف</label>
+        <input class="input" id="qe-cat" value="${esc(d.category)}"></div>
+    </div>
+    <div class="row">
+      <div class="field" style="flex:1"><label>النقاط</label>
+        <input class="input" type="number" id="qe-points" value="${d.points}"></div>
+      <div class="field" style="flex:1"><label>المدة</label>
+        <input class="input" type="number" id="qe-time" value="${d.timeLimit}"></div>
+    </div>
+    ${needCT ? `<div class="field"><label>الإجابة الصحيحة</label>
+      <input class="input" id="qe-correcttext" value="${esc(d.correctText)}"></div>` : ''}
+    ${renderChoicesHTML()}
+    <div class="field"><label>الشرح</label>
+      <textarea class="textarea" id="qe-exp" style="min-height:60px">${esc(d.explanation)}</textarea></div>
+  `, `<button class="btn primary" onclick="App.q.save()">💾 حفظ</button>
+      <button class="btn ghost" onclick="App.closeModal()">إلغاء</button>`, { width: '700px' });
+}
+
+/* =====================================================================
+   KEYBOARD
+   ===================================================================== */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    if ($('#modal-root').classList.contains('on')) { closeModal(); return; }
+    if (document.fullscreenElement) document.exitFullscreen();
+  }
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+  if (e.code === 'Space' && currentRoute().startsWith('#/dash/live')) {
+    e.preventDefault();
+    App.live.toggleTimer();
+  }
+});
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+(async function boot() {
+  const loaded = loadState();
+  if (loaded) {
+    state = loaded;
+    if (!state.auth.passHash) { state.auth.passHash = await sha256(SALT + '1234'); save(false); }
+  } else {
+    state = defaultState();
+    state.auth.passHash = await sha256(SALT + '1234');
+    ensureCardMaps(); ensureCardRules(); ensureCardSupply();
+    save(false);
+  }
+  if (!location.hash) location.hash = '#/';
+  render();
+  if (!storageOK) {
+    setTimeout(() => toast('تحذير: التخزين المحلي لا يعمل — البيانات لن تُحفظ', 'bad'), 800);
+  }
+})();
+</script>
+</body>
+</html>
